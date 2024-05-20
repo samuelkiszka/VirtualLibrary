@@ -35,6 +35,6 @@ fun CollectionListScreen() {
 @Composable
 fun CollectionListScreenPreview() {
     VirtualLibraryTheme {
-        LibraryListScreen()
+        CollectionListScreen()
     }
 }

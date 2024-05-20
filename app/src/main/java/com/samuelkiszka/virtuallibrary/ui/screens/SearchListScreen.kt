@@ -35,6 +35,6 @@ fun SearchListScreen() {
 @Composable
 fun SearchListScreenPreview() {
     VirtualLibraryTheme {
-        LibraryListScreen()
+        SearchListScreen()
     }
 }

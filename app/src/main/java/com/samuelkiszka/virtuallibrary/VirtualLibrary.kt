@@ -195,7 +195,11 @@ fun VirtualLibrary(
             composable(
                 route = LibraryListDestination.route
             ) {
-                LibraryListScreen()
+                LibraryListScreen(
+                    onItemClicked = {
+                        navController.navigate(LibraryDetailDestination.route)
+                    }
+                )
             }
             composable(
                 route = LibraryDetailDestination.route
