@@ -65,7 +65,7 @@ fun VirtualLibraryBottomBar(
               if (currentScreenRoute == LibraryListDestination.route) {
                   Text(
                       text = "Library",
-                      color = MaterialTheme.colorScheme.tertiary
+                      color = MaterialTheme.colorScheme.secondary
                   )
               }
               else {
@@ -80,7 +80,7 @@ fun VirtualLibraryBottomBar(
               if (currentScreenRoute == CollectionListDestination.route) {
                   Text(
                       text = "Collection",
-                      color = MaterialTheme.colorScheme.tertiary
+                      color = MaterialTheme.colorScheme.secondary
                   )
               }
               else {
@@ -95,7 +95,7 @@ fun VirtualLibraryBottomBar(
               if (currentScreenRoute == SearchListDestination.route) {
                   Text(
                       text = "Search",
-                      color = MaterialTheme.colorScheme.tertiary
+                      color = MaterialTheme.colorScheme.secondary
                   )
               }
               else {
