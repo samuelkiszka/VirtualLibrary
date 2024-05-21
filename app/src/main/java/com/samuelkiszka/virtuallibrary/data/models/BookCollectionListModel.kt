@@ -1,10 +1,7 @@
 package com.samuelkiszka.virtuallibrary.data.models
 
-data class BookListModel(
+data class BookCollectionListModel(
     val id: Int,
-    val title: String,
-    val author: String,
     val image: Int
-){
-
+) {
 }

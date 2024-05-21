@@ -46,9 +46,6 @@ fun LibraryListScreen(
             onItemClicked = onItemClicked,
             modifier = Modifier
         )
-        Text(
-            text = stringResource(id = R.string.library_list_screen_name)
-        )
     }
 }
 
@@ -89,7 +86,7 @@ fun BookListCard(
                 .fillMaxSize()
         ) {
             Image(
-                painter = painterResource(id = R.drawable.demo_book_cover),
+                painter = painterResource(id = book.image),
                 contentDescription = "",
                 modifier = Modifier
 //                    .height(150.dp)
