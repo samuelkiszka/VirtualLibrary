@@ -28,7 +28,9 @@ fun CollectionDetailScreen(
     Scaffold(
         topBar = {
             VirtualLibraryTopBar(
-                screenTitleId = R.string.collection_detail_screen_name
+                screenTitleId = R.string.collection_detail_screen_name,
+                canNavigateBack = true,
+                navigateBack = { navController.navigateUp() }
             )
         },
         bottomBar = {

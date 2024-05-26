@@ -1,6 +1,7 @@
 package com.samuelkiszka.virtuallibrary.ui.screens.collection
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -27,6 +28,8 @@ import com.samuelkiszka.virtuallibrary.ui.common.VirtualLibraryBottomBar
 import com.samuelkiszka.virtuallibrary.ui.common.VirtualLibrarySearchBar
 import com.samuelkiszka.virtuallibrary.ui.common.VirtualLibraryTopBar
 import com.samuelkiszka.virtuallibrary.ui.navigation.NavigationDestination
+import com.samuelkiszka.virtuallibrary.ui.screens.library.LibraryDetailBody
+import com.samuelkiszka.virtuallibrary.ui.screens.library.LibraryDetailDestination
 import com.samuelkiszka.virtuallibrary.ui.theme.VirtualLibraryTheme
 
 object CollectionListDestination : NavigationDestination {
@@ -53,6 +56,12 @@ fun CollectionListScreen(
         }
     ) { innerPadding ->
         CollectionListBody(
+            onBookClicked = {
+                navController.navigate(LibraryDetailDestination.route)
+            },
+            onCollectionClicked = {
+                navController.navigate(CollectionDetailDestination.route)
+            },
             modifier = Modifier.padding(
                 bottom = innerPadding.calculateBottomPadding(),
                 top = dimensionResource(id = R.dimen.top_bar_size)
@@ -63,14 +72,18 @@ fun CollectionListScreen(
 
 @Composable
 fun CollectionListBody(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onBookClicked: (Int) -> Unit,
+    onCollectionClicked: (Int) -> Unit
 ) {
     Column (
         modifier = modifier.fillMaxSize()
     ) {
         VirtualLibrarySearchBar()
         CollectionList(
-            collections = CollectionListViewModel().getCollectionList()
+            collections = CollectionListViewModel().getCollectionList(),
+            onBookClicked = onBookClicked,
+            onCollectionClicked = onCollectionClicked
         )
     }
 }
@@ -78,14 +91,20 @@ fun CollectionListBody(
 @Composable
 fun CollectionList(
     collections: List<CollectionListModel>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onBookClicked: (Int) -> Unit,
+    onCollectionClicked: (Int) -> Unit
 ) {
     LazyColumn(
         modifier = modifier
             .padding(horizontal = dimensionResource(id = R.dimen.padding_around))
     ) {
         items(collections) {
-            CollectionCard(it)
+            CollectionCard(
+                it,
+                onBookClicked = onBookClicked,
+                onCollectionClicked = onCollectionClicked
+            )
         }
     }
 }
@@ -93,7 +112,9 @@ fun CollectionList(
 @Composable
 fun CollectionCard(
     collection: CollectionListModel,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onBookClicked: (Int) -> Unit,
+    onCollectionClicked: (Int) -> Unit
 ) {
     Column(
         modifier = modifier
@@ -101,6 +122,9 @@ fun CollectionCard(
             .padding(
                 bottom = dimensionResource(id = R.dimen.padding_around)
             )
+            .clickable {
+                onCollectionClicked(collection.id)
+            }
     ) {
         Text(
             text = collection.name,
@@ -112,7 +136,10 @@ fun CollectionCard(
                 .padding(bottom = dimensionResource(id = R.dimen.padding_around))
         ) {
             items(collection.books) {
-                BookCard(it)
+                BookCard(
+                    it,
+                    onBookClicked = onBookClicked
+                )
             }
         }
     }
@@ -121,7 +148,8 @@ fun CollectionCard(
 @Composable
 fun BookCard(
     book: BookCollectionListModel,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onBookClicked: (Int) -> Unit
 ) {
     Image(
         painterResource(id = book.image),
@@ -133,6 +161,9 @@ fun BookCard(
                 start = dimensionResource(id = R.dimen.padding_little),
                 end = dimensionResource(id = R.dimen.padding_little)
             )
+            .clickable {
+                onBookClicked(book.id)
+            }
     )
 }
 
