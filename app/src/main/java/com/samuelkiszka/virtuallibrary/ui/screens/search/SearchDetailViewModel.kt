@@ -1,4 +1,4 @@
-package com.samuelkiszka.virtuallibrary.ui.screens
+package com.samuelkiszka.virtuallibrary.ui.screens.search
 
 import androidx.lifecycle.ViewModel
 

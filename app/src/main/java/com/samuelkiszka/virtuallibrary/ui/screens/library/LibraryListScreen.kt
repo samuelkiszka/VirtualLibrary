@@ -1,4 +1,4 @@
-package com.samuelkiszka.virtuallibrary.ui.screens
+package com.samuelkiszka.virtuallibrary.ui.screens.library
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -11,17 +11,23 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.samuelkiszka.virtuallibrary.R
 import com.samuelkiszka.virtuallibrary.data.models.BookListModel
+import com.samuelkiszka.virtuallibrary.ui.common.VirtualLibraryBottomBar
+import com.samuelkiszka.virtuallibrary.ui.common.VirtualLibrarySearchBar
+import com.samuelkiszka.virtuallibrary.ui.common.VirtualLibraryTopBar
 import com.samuelkiszka.virtuallibrary.ui.navigation.NavigationDestination
 import com.samuelkiszka.virtuallibrary.ui.theme.VirtualLibraryTheme
 
@@ -30,17 +36,48 @@ object LibraryListDestination : NavigationDestination {
     override val titleRes = R.string.library_list_screen_name
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LibraryListScreen(
+    navController: NavHostController = NavHostController(LocalContext.current)
+) {
+    Scaffold(
+        topBar = {
+            VirtualLibraryTopBar(
+                screenTitleId = R.string.library_list_screen_name
+            )
+        },
+        bottomBar = {
+            VirtualLibraryBottomBar(
+                navController = navController,
+                currentScreenRoute = LibraryListDestination.route
+            )
+        }
+    ) { innerPadding ->
+        LibraryListBody(
+            onItemClicked = {
+                navController.navigate(LibraryDetailDestination.route)
+            },
+            modifier = Modifier.padding(
+                bottom = innerPadding.calculateBottomPadding(),
+                top = dimensionResource(id = R.dimen.top_bar_size)
+            )
+        )
+    }
+}
+
+@Composable
+fun LibraryListBody(
     onItemClicked: (String) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Column (
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
-            .padding(dimensionResource(id = R.dimen.padding_around))
     ) {
+        VirtualLibrarySearchBar()
         BookList(
             books = LibraryListViewModel().getBookList(),
             onItemClicked = onItemClicked,
@@ -56,7 +93,10 @@ fun BookList(
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
-        modifier = Modifier.fillMaxSize()
+        modifier = modifier
+            .padding(
+                horizontal = dimensionResource(id = R.dimen.padding_around)
+            )
     ) {
         items(books) {
             BookListCard(
@@ -114,6 +154,6 @@ fun BookListCard(
 @Composable
 fun LibraryListScreenPreview() {
     VirtualLibraryTheme {
-        LibraryListScreen({})
+        LibraryListScreen()
     }
 }

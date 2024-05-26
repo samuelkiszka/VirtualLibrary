@@ -1,4 +1,4 @@
-package com.samuelkiszka.virtuallibrary.ui.screens
+package com.samuelkiszka.virtuallibrary.ui.screens.collection
 
 import androidx.lifecycle.ViewModel
 import com.samuelkiszka.virtuallibrary.data.mocks.CollectionListModelMock

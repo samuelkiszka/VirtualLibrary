@@ -7,4 +7,6 @@
     <string name="collection_detail_screen_name">Collection Detail</string>
     <string name="search_list_screen_name">Search</string>
     <string name="search_detail_screen_name">Search Book Detail</string>
+
+    <string name="back_button">Back</string>
 </resources>
