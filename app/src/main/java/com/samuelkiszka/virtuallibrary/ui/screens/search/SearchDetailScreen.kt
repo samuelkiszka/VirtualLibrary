@@ -28,7 +28,9 @@ fun SearchDetailScreen(
     Scaffold(
         topBar = {
             VirtualLibraryTopBar(
-                screenTitleId = R.string.search_detail_screen_name
+                screenTitleId = R.string.search_detail_screen_name,
+                canNavigateBack = true,
+                navigateBack = { navController.navigateUp() }
             )
         },
         bottomBar = {

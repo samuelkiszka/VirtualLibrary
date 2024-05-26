@@ -9,4 +9,7 @@
     <string name="search_detail_screen_name">Search Book Detail</string>
 
     <string name="back_button">Back</string>
+    <string name="add_book_button">Add Book</string>
+
+    <string name="add_book_text">To find a book online, \nsimply type in the title or create a new record by clicking the button below</string>
 </resources>

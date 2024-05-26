@@ -28,7 +28,6 @@ import com.samuelkiszka.virtuallibrary.ui.common.VirtualLibraryBottomBar
 import com.samuelkiszka.virtuallibrary.ui.common.VirtualLibrarySearchBar
 import com.samuelkiszka.virtuallibrary.ui.common.VirtualLibraryTopBar
 import com.samuelkiszka.virtuallibrary.ui.navigation.NavigationDestination
-import com.samuelkiszka.virtuallibrary.ui.screens.library.LibraryDetailBody
 import com.samuelkiszka.virtuallibrary.ui.screens.library.LibraryDetailDestination
 import com.samuelkiszka.virtuallibrary.ui.theme.VirtualLibraryTheme
 
