@@ -2,6 +2,7 @@ package com.samuelkiszka.virtuallibrary.ui.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -17,6 +18,7 @@ import com.samuelkiszka.virtuallibrary.ui.screens.search.SearchDetailDestination
 import com.samuelkiszka.virtuallibrary.ui.screens.search.SearchDetailScreen
 import com.samuelkiszka.virtuallibrary.ui.screens.search.SearchListDestination
 import com.samuelkiszka.virtuallibrary.ui.screens.search.SearchListScreen
+import com.samuelkiszka.virtuallibrary.ui.screens.search.SearchListViewModel
 
 @Composable
 fun VirtualLibraryNavGraph(
@@ -59,8 +61,10 @@ fun VirtualLibraryNavGraph(
         composable(
             route = SearchListDestination.route
         ) {
+            val viewModel: SearchListViewModel = viewModel(factory = SearchListViewModel.Factory)
             SearchListScreen(
-                navController = navController
+                navController = navController,
+                searchListUiState = viewModel.searchListUiState
             )
         }
         composable(

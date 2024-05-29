@@ -42,7 +42,8 @@ object SearchListDestination : NavigationDestination {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchListScreen(
-    navController: NavHostController = NavHostController(LocalContext.current)
+    navController: NavHostController = NavHostController(LocalContext.current),
+    searchListUiState: SearchListUiState
 ) {
     Scaffold(
         topBar = {
@@ -58,6 +59,7 @@ fun SearchListScreen(
         }
     ) { innerPadding ->
         SearchListBody(
+            searchListUiState = searchListUiState,
             onItemClicked = {
                 navController.navigate(SearchDetailDestination.route)
             },
@@ -71,25 +73,24 @@ fun SearchListScreen(
 
 @Composable
 fun SearchListBody(
+    searchListUiState: SearchListUiState,
     onItemClicked: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    VirtualLibrarySearchBar()
     Column (
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
         modifier = modifier
             .fillMaxSize()
     ) {
-        VirtualLibrarySearchBar()
-        if (SearchListViewModel().queryText != "") {
-            BookList(
-                books = LibraryListViewModel().getBookList(),
-                onItemClicked = onItemClicked,
-                modifier = Modifier
+        when (searchListUiState) {
+            is SearchListUiState.Loading -> LoadingScreen()
+            is SearchListUiState.Error -> ErrorScreen()
+            is SearchListUiState.Success -> SearchBookList(
+                isbnList = searchListUiState.isbnList
             )
-        }
-        else {
-            AddNewBookText(
+            is SearchListUiState.Empty -> AddNewBookText(
                 onButtonClicked = onItemClicked
             )
         }
@@ -97,14 +98,34 @@ fun SearchListBody(
 }
 
 @Composable
+fun LoadingScreen(
+    modifier: Modifier = Modifier
+) {
+    Text(
+        text = "Loading...",
+        modifier = modifier
+    )
+}
+
+@Composable
+fun ErrorScreen(
+    modifier: Modifier = Modifier
+) {
+    Text(
+        text = "Error...",
+        modifier = modifier
+    )
+}
+
+@Composable
 fun AddNewBookText(
     onButtonClicked: (String) -> Unit,
-    modirier: Modifier = Modifier
+    modifier: Modifier = Modifier
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
-        modifier = modirier
+        modifier = modifier
             .fillMaxSize()
     ) {
          Text(
@@ -132,10 +153,19 @@ fun AddNewBookText(
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun SearchListScreenPreview() {
-    VirtualLibraryTheme {
-        SearchListScreen()
-    }
+fun SearchBookList(
+    isbnList: List<String>,
+) {
+    Text(
+        text = isbnList.toString()
+    )
 }
+
+//@Preview(showBackground = true, showSystemUi = true)
+//@Composable
+//fun SearchListScreenPreview() {
+//    VirtualLibraryTheme {
+//        SearchListScreen()
+//    }
+//}
