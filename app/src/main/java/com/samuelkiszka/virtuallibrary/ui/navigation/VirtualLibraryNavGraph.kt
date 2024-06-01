@@ -64,7 +64,7 @@ fun VirtualLibraryNavGraph(
             val viewModel: SearchListViewModel = viewModel(factory = SearchListViewModel.Factory)
             SearchListScreen(
                 navController = navController,
-                searchListUiState = viewModel.searchListUiState
+                viewModel = viewModel
             )
         }
         composable(

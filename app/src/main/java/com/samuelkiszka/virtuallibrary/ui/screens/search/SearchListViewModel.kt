@@ -25,15 +25,20 @@ sealed interface SearchListUiState {
 class SearchListViewModel(
     private val bookRepository: BookRepository
 ): ViewModel() {
-    var searchListUiState: SearchListUiState by mutableStateOf(SearchListUiState.Loading)
+    var searchListUiState: SearchListUiState by mutableStateOf(SearchListUiState.Empty)
         private set
-    val queryText: String = "harry"
+    var query by mutableStateOf("")
+        private set
 
     init {
-        getIsbnList(queryText)
+        getBooksByQuery()
     }
 
-    fun getIsbnList(query: String) {
+    fun updateQuery(newQuery: String) {
+        this.query = newQuery
+    }
+
+    fun getBooksByQuery() {
         if (query.isEmpty()) {
             searchListUiState = SearchListUiState.Empty
             return

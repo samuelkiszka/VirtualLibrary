@@ -78,7 +78,7 @@ fun CollectionListBody(
     Column (
         modifier = modifier.fillMaxSize()
     ) {
-        VirtualLibrarySearchBar()
+        VirtualLibrarySearchBar {}
         CollectionList(
             collections = CollectionListViewModel().getCollectionList(),
             onBookClicked = onBookClicked,

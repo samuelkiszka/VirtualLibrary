@@ -2,6 +2,7 @@ package com.samuelkiszka.virtuallibrary.ui.screens.search
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -53,7 +54,7 @@ object SearchListDestination : NavigationDestination {
 @Composable
 fun SearchListScreen(
     navController: NavHostController = NavHostController(LocalContext.current),
-    searchListUiState: SearchListUiState
+    viewModel: SearchListViewModel,
 ) {
     Scaffold(
         topBar = {
@@ -69,7 +70,7 @@ fun SearchListScreen(
         }
     ) { innerPadding ->
         SearchListBody(
-            searchListUiState = searchListUiState,
+            viewModel = viewModel,
             onItemClicked = {
                 navController.navigate(SearchDetailDestination.route)
             },
@@ -83,7 +84,7 @@ fun SearchListScreen(
 
 @Composable
 fun SearchListBody(
-    searchListUiState: SearchListUiState,
+    viewModel: SearchListViewModel,
     onItemClicked: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -92,12 +93,17 @@ fun SearchListBody(
         modifier = modifier
             .fillMaxSize()
     ) {
-        VirtualLibrarySearchBar()
-        when (searchListUiState) {
+        VirtualLibrarySearchBar(
+            query = viewModel.query,
+            onSearch = { viewModel.getBooksByQuery() },
+            onQueryChange = { viewModel.updateQuery(it) }
+        )
+        when (viewModel.searchListUiState) {
             is SearchListUiState.Loading -> LoadingScreen()
             is SearchListUiState.Error -> ErrorScreen()
             is SearchListUiState.Success -> SearchBookList(
-                bookList = searchListUiState.bookList
+                bookList = (viewModel.searchListUiState as SearchListUiState.Success).bookList,
+                onItemClicked = onItemClicked
             )
             is SearchListUiState.Empty -> AddNewBookText(
                 onButtonClicked = onItemClicked
@@ -165,6 +171,7 @@ fun AddNewBookText(
 @Composable
 fun SearchBookList(
     bookList: List<BookApiModel>,
+    onItemClicked: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
@@ -175,7 +182,11 @@ fun SearchBookList(
     ) {
         items(bookList) {
             SearchBookListCard(
-                book = it
+                book = it,
+                modifier = Modifier
+                    .clickable {
+                        onItemClicked(it.title)
+                    }
             )
         }
     }

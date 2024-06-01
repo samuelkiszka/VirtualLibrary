@@ -76,7 +76,7 @@ fun LibraryListBody(
         modifier = modifier
             .fillMaxSize()
     ) {
-        VirtualLibrarySearchBar()
+        VirtualLibrarySearchBar {}
         BookList(
             books = LibraryListViewModel().getBookList(),
             onItemClicked = onItemClicked,
