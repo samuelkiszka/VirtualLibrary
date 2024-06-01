@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.samuelkiszka.virtuallibrary.R
+import com.samuelkiszka.virtuallibrary.data.models.BookApiModel
 import com.samuelkiszka.virtuallibrary.ui.common.VirtualLibraryBottomBar
 import com.samuelkiszka.virtuallibrary.ui.common.VirtualLibrarySearchBar
 import com.samuelkiszka.virtuallibrary.ui.common.VirtualLibraryTopBar
@@ -88,7 +89,7 @@ fun SearchListBody(
             is SearchListUiState.Loading -> LoadingScreen()
             is SearchListUiState.Error -> ErrorScreen()
             is SearchListUiState.Success -> SearchBookList(
-                isbnList = searchListUiState.isbnList
+                bookList = searchListUiState.bookList
             )
             is SearchListUiState.Empty -> AddNewBookText(
                 onButtonClicked = onItemClicked
@@ -155,10 +156,10 @@ fun AddNewBookText(
 
 @Composable
 fun SearchBookList(
-    isbnList: List<String>,
+    bookList: List<BookApiModel>,
 ) {
     Text(
-        text = isbnList.toString()
+        text = bookList.first().toString()
     )
 }
 

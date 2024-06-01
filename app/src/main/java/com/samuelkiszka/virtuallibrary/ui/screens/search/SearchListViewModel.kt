@@ -12,10 +12,11 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.samuelkiszka.virtuallibrary.VirtualLibraryApplication
 import com.samuelkiszka.virtuallibrary.data.BookRepository
+import com.samuelkiszka.virtuallibrary.data.models.BookApiModel
 import kotlinx.coroutines.launch
 
 sealed interface SearchListUiState {
-    data class Success(val isbnList: List<String>): SearchListUiState
+    data class Success(val bookList: List<BookApiModel>): SearchListUiState
     object Error: SearchListUiState
     object Loading: SearchListUiState
     object Empty: SearchListUiState
@@ -40,7 +41,7 @@ class SearchListViewModel(
         viewModelScope.launch {
             searchListUiState = SearchListUiState.Loading
             searchListUiState = try {
-                SearchListUiState.Success(bookRepository.getIsbnList(query))
+                SearchListUiState.Success(bookRepository.getBooksByQuery(query))
             } catch (e: Exception) {
                 Log.e("BookRepository", "getIsbnList: ", e)
                 SearchListUiState.Error
