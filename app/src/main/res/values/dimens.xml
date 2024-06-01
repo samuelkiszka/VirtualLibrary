@@ -5,5 +5,8 @@
     <dimen name="padding_medium">16dp</dimen>
 
     <dimen name="top_bar_size">50dp</dimen>
-    <dimen name="image_size">64dp</dimen>
+
+    <!-- List card values -->
+    <dimen name="list_image_width">74sp</dimen>
+    <dimen name="list_card_height">110sp</dimen>
 </resources>

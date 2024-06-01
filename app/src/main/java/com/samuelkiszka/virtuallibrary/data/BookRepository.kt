@@ -17,22 +17,23 @@ class DefaultBookRepository(
     private val collectionDao: CollectionDao
 ) : BookRepository {
     override suspend fun getIsbnList(query: String): List<String> {
-        var response = bookApiService.getWorksList(query=query)
-        Log.d("API", response.toString())
-        var isbnList = mutableListOf<String>()
+        val response = bookApiService.getWorksList(query=query)
+        val isbnList = mutableListOf<String>()
         for (work in response.docs){
-            isbnList.add(work.editions.docs[0].isbn[0])
+            val isbn = work.editions.docs[0].isbn
+            if (isbn.isNotEmpty()){
+                isbnList.add(isbn[0])
+            }
         }
         return isbnList
     }
 
     override suspend fun getBooksByQuery(query: String): List<BookApiModel> {
-        var isbnList = this.getIsbnList(query)
-        var bookList = mutableListOf<BookApiModel>()
+        val isbnList = this.getIsbnList(query)
+        val bookList = mutableListOf<BookApiModel>()
         for (isbn in isbnList){
-            var response = bookApiService.getBookByIsbn(isbn="isbn:$isbn")
+            val response = bookApiService.getBookByIsbn(isbn="isbn:$isbn")
             bookList.add(response.books.values.first())
-            Log.d("API", response.books.values.first().title)
         }
         return bookList
     }
