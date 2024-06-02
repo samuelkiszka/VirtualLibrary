@@ -17,9 +17,9 @@ import kotlinx.coroutines.launch
 
 sealed interface SearchListUiState {
     data class Success(val bookList: List<BookApiModel>): SearchListUiState
-    object Error: SearchListUiState
-    object Loading: SearchListUiState
-    object Empty: SearchListUiState
+    data object Error: SearchListUiState
+    data object Loading: SearchListUiState
+    data object Empty: SearchListUiState
 }
 
 class SearchListViewModel(
