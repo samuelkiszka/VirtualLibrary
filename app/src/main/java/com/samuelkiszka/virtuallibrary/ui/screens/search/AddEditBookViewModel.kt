@@ -13,6 +13,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.samuelkiszka.virtuallibrary.VirtualLibraryApplication
 import com.samuelkiszka.virtuallibrary.data.BookRepository
+import com.samuelkiszka.virtuallibrary.data.entities.BookEntity
 import com.samuelkiszka.virtuallibrary.data.models.AddEditBookModel
 
 data class AddEditUiState(
@@ -37,7 +38,7 @@ class AddEditBookViewModel(
     var yearPublished by mutableStateOf("")
         private set
 
-    var numberOfPages by mutableStateOf(0)
+    var numberOfPages by mutableStateOf("")
         private set
 
     var notes by mutableStateOf("")
@@ -57,7 +58,7 @@ class AddEditBookViewModel(
 
     fun updateNumberOfPages(newNumberOfPages: String) {
         if (newNumberOfPages.isEmpty() || newNumberOfPages.matches(Regex("^\\d+\$"))) {
-            numberOfPages = newNumberOfPages.toInt()
+            numberOfPages = newNumberOfPages
         }
     }
 
@@ -72,8 +73,19 @@ class AddEditBookViewModel(
         updateTitle(addEditUiState.book.title)
         updateAuthor(addEditUiState.book.author)
         updateYearPublished(addEditUiState.book.yearPublished)
-        updateNumberOfPages(addEditUiState.book.numberOfPages.toString())
+        updateNumberOfPages(addEditUiState.book.numberOfPages)
         updateNotes(addEditUiState.book.notes)
+    }
+
+    suspend fun saveBook(): Long {
+        return bookRepository.saveBook(
+            AddEditBookModel(
+                title = title,
+                author = author,
+                yearPublished = yearPublished,
+                numberOfPages = numberOfPages,
+                notes = notes
+            ).toBookEntity())
     }
 
     companion object {

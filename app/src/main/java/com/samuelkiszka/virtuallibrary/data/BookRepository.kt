@@ -1,14 +1,19 @@
 package com.samuelkiszka.virtuallibrary.data
 
-import android.util.Log
 import com.samuelkiszka.virtuallibrary.data.daos.BookDao
 import com.samuelkiszka.virtuallibrary.data.daos.CollectionDao
+import com.samuelkiszka.virtuallibrary.data.entities.BookEntity
 import com.samuelkiszka.virtuallibrary.data.models.BookApiModel
+import com.samuelkiszka.virtuallibrary.data.models.BookListModel
 import com.samuelkiszka.virtuallibrary.network.BookApiService
+import kotlinx.coroutines.flow.Flow
 
 interface BookRepository {
     suspend fun getIsbnList(query: String): List<String>
     suspend fun getBooksByQuery(query: String): List<BookApiModel>
+    suspend fun saveBook(book: BookEntity): Long
+    fun getBookByIdStream(id: Long): Flow<BookEntity?>
+    fun getBookListStream(): Flow<List<BookListModel>>
 }
 
 class DefaultBookRepository(
@@ -36,5 +41,17 @@ class DefaultBookRepository(
             bookList.add(response.books.values.first())
         }
         return bookList
+    }
+
+    override suspend fun saveBook(book: BookEntity): Long {
+        return bookDao.insertBook(book)
+    }
+
+    override fun getBookByIdStream(id: Long): Flow<BookEntity?> {
+        return bookDao.getBookById(id)
+    }
+
+    override fun getBookListStream(): Flow<List<BookListModel>> {
+        return bookDao.getBookList()
     }
 }

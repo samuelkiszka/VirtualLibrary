@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
@@ -15,14 +16,19 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.samuelkiszka.virtuallibrary.R
 import com.samuelkiszka.virtuallibrary.data.models.BookListModel
 import com.samuelkiszka.virtuallibrary.ui.common.VirtualLibraryBottomBar
@@ -39,8 +45,10 @@ object LibraryListDestination : NavigationDestination {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LibraryListScreen(
-    navController: NavHostController = NavHostController(LocalContext.current)
+    navController: NavHostController = NavHostController(LocalContext.current),
+    viewModel: LibraryListViewModel = viewModel(factory = LibraryListViewModel.Factory),
 ) {
+    val uiState = viewModel.uiState.collectAsState()
     Scaffold(
         topBar = {
             VirtualLibraryTopBar(
@@ -55,8 +63,9 @@ fun LibraryListScreen(
         }
     ) { innerPadding ->
         LibraryListBody(
+            books = uiState.value.bookList,
             onItemClicked = {
-                navController.navigate(LibraryDetailDestination.route)
+                navController.navigate("${LibraryDetailDestination.route}/$it")
             },
             modifier = Modifier.padding(
                 bottom = innerPadding.calculateBottomPadding(),
@@ -68,7 +77,8 @@ fun LibraryListScreen(
 
 @Composable
 fun LibraryListBody(
-    onItemClicked: (String) -> Unit,
+    books: List<BookListModel>,
+    onItemClicked: (Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column (
@@ -78,7 +88,7 @@ fun LibraryListBody(
     ) {
         VirtualLibrarySearchBar {}
         BookList(
-            books = LibraryListViewModel().getBookList(),
+            books = books,
             onItemClicked = onItemClicked,
             modifier = Modifier
         )
@@ -88,7 +98,7 @@ fun LibraryListBody(
 @Composable
 fun BookList(
     books: List<BookListModel>,
-    onItemClicked: (String) -> Unit,
+    onItemClicked: (Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
@@ -102,7 +112,7 @@ fun BookList(
                 book = it,
                 modifier = Modifier
                     .clickable {
-                        onItemClicked(it.title)
+                        onItemClicked(it.id)
                     }
             )
         }
@@ -124,11 +134,17 @@ fun BookListCard(
             modifier = Modifier
                 .fillMaxSize()
         ) {
-            Image(
-                painter = painterResource(id = book.image),
-                contentDescription = "",
+            AsyncImage(
+                model = ImageRequest.Builder(context = LocalContext.current)
+                    .data(book.coverUrl)
+                    .crossfade(true)
+                    .build(),
+                contentDescription = book.title,
+                contentScale = ContentScale.FillBounds,
+                error = painterResource(id = R.drawable.demo_book_cover),
+                placeholder = painterResource(id = R.drawable.demo_book_cover),
                 modifier = Modifier
-//                    .height(150.dp)
+                    .width(dimensionResource(id = R.dimen.list_image_width))
             )
             Column(
                 modifier = Modifier

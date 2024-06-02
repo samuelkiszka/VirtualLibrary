@@ -1,8 +1,5 @@
 package com.samuelkiszka.virtuallibrary.ui.screens.search
 
-import android.content.Context
-import android.view.View
-import android.view.inputmethod.InputMethodManager
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -10,17 +7,24 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
@@ -28,6 +32,9 @@ import coil.request.ImageRequest
 import com.samuelkiszka.virtuallibrary.R
 import com.samuelkiszka.virtuallibrary.ui.common.VirtualLibraryTopBar
 import com.samuelkiszka.virtuallibrary.ui.navigation.NavigationDestination
+import com.samuelkiszka.virtuallibrary.ui.screens.library.LibraryDetailDestination
+import kotlinx.coroutines.launch
+import kotlin.coroutines.coroutineContext
 
 object AddEditBookDestination : NavigationDestination {
     override val route = "AddEditBook"
@@ -42,6 +49,7 @@ fun AddEditBookScreen(
     navController: NavHostController = NavHostController(LocalContext.current),
     viewModel: AddEditBookViewModel
 ) {
+    val coroutineScope = rememberCoroutineScope()
     Scaffold(
         topBar = {
             VirtualLibraryTopBar(
@@ -51,7 +59,14 @@ fun AddEditBookScreen(
             )
         },
         bottomBar = {
-            SaveButton()
+            SaveButton(
+                onSave = {
+                    coroutineScope.launch {
+                        val id = viewModel.saveBook()
+                        navController.navigate("${LibraryDetailDestination.route}/$id")
+                    }
+                }
+            )
         }
     ) { innerPadding ->
         SearchDetailBody(
@@ -69,10 +84,12 @@ fun SearchDetailBody(
     viewModel: AddEditBookViewModel,
     modifier: Modifier = Modifier
 ) {
+    val scrollState = rememberScrollState()
     Column(
         modifier = modifier
             .padding(dimensionResource(id = R.dimen.padding_around))
             .fillMaxSize()
+            .verticalScroll(scrollState)
     ) {
         Header(
             viewModel
@@ -129,6 +146,9 @@ fun ValueEditingFields(
             value = viewModel.title,
             onValueChange = { viewModel.updateTitle(it) },
             label = { Text("Title") },
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Next
+            ),
             modifier = Modifier
                 .fillMaxWidth()
         )
@@ -136,6 +156,9 @@ fun ValueEditingFields(
             value = viewModel.author,
             onValueChange = { viewModel.updateAuthor(it) },
             label = { Text("Author") },
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Next
+            ),
             modifier = Modifier
                 .fillMaxWidth()
         )
@@ -143,13 +166,20 @@ fun ValueEditingFields(
             value = viewModel.yearPublished,
             onValueChange = { viewModel.updateYearPublished(it) },
             label = { Text("Year published") },
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Next
+            ),
             modifier = Modifier
                 .fillMaxWidth()
         )
         OutlinedTextField(
-            value = viewModel.numberOfPages.toString(),
+            value = viewModel.numberOfPages,
             onValueChange = { viewModel.updateNumberOfPages(it) },
             label = { Text("Number of pages") },
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Number,
+                imeAction = ImeAction.Next
+            ),
             modifier = Modifier
                 .fillMaxWidth()
         )
@@ -157,6 +187,9 @@ fun ValueEditingFields(
             value = viewModel.notes,
             onValueChange = { viewModel.updateNotes(it) },
             label = { Text("Notes") },
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Done
+            ),
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight()
@@ -166,13 +199,14 @@ fun ValueEditingFields(
 
 @Composable
 fun SaveButton(
+    onSave: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Button(
-        onClick = {},
+        onClick = { onSave() },
         modifier = modifier
             .fillMaxWidth()
     ) {
-        Text("Save")
+        Text(stringResource(R.string.save_button_text))
     }
 }

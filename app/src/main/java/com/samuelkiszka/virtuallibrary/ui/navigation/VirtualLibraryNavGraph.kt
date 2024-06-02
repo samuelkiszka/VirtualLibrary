@@ -14,6 +14,7 @@ import com.samuelkiszka.virtuallibrary.ui.screens.collection.CollectionListDesti
 import com.samuelkiszka.virtuallibrary.ui.screens.collection.CollectionListScreen
 import com.samuelkiszka.virtuallibrary.ui.screens.library.LibraryDetailDestination
 import com.samuelkiszka.virtuallibrary.ui.screens.library.LibraryDetailScreen
+import com.samuelkiszka.virtuallibrary.ui.screens.library.LibraryDetailViewModel
 import com.samuelkiszka.virtuallibrary.ui.screens.library.LibraryListDestination
 import com.samuelkiszka.virtuallibrary.ui.screens.library.LibraryListScreen
 import com.samuelkiszka.virtuallibrary.ui.screens.search.AddEditBookDestination
@@ -41,8 +42,12 @@ fun VirtualLibraryNavGraph(
             )
         }
         composable(
-            route = LibraryDetailDestination.route
+            route = LibraryDetailDestination.routeWithArgs,
+            arguments = listOf(navArgument(LibraryDetailDestination.ARGS) {
+                type = NavType.LongType
+            })
         ) {
+            val viewModel: LibraryDetailViewModel = viewModel(factory = LibraryDetailViewModel.Factory)
             LibraryDetailScreen(
                 navController = navController
             )

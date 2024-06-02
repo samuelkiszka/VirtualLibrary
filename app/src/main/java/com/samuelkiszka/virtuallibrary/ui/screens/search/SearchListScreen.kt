@@ -1,8 +1,5 @@
 package com.samuelkiszka.virtuallibrary.ui.screens.search
 
-import android.content.Context
-import android.view.View
-import android.view.inputmethod.InputMethodManager
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

@@ -13,4 +13,5 @@
 
     <string name="add_book_text">To find a book online, \nsimply type in the title or create a new record by clicking the button below</string>
     <string name="loading">Loading...</string>
+    <string name="save_button_text">Save</string>
 </resources>
