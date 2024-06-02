@@ -4,8 +4,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.samuelkiszka.virtuallibrary.ui.screens.collection.CollectionDetailDestination
 import com.samuelkiszka.virtuallibrary.ui.screens.collection.CollectionDetailScreen
 import com.samuelkiszka.virtuallibrary.ui.screens.collection.CollectionListDestination
@@ -14,8 +16,9 @@ import com.samuelkiszka.virtuallibrary.ui.screens.library.LibraryDetailDestinati
 import com.samuelkiszka.virtuallibrary.ui.screens.library.LibraryDetailScreen
 import com.samuelkiszka.virtuallibrary.ui.screens.library.LibraryListDestination
 import com.samuelkiszka.virtuallibrary.ui.screens.library.LibraryListScreen
-import com.samuelkiszka.virtuallibrary.ui.screens.search.SearchDetailDestination
-import com.samuelkiszka.virtuallibrary.ui.screens.search.SearchDetailScreen
+import com.samuelkiszka.virtuallibrary.ui.screens.search.AddEditBookDestination
+import com.samuelkiszka.virtuallibrary.ui.screens.search.AddEditBookScreen
+import com.samuelkiszka.virtuallibrary.ui.screens.search.AddEditBookViewModel
 import com.samuelkiszka.virtuallibrary.ui.screens.search.SearchListDestination
 import com.samuelkiszka.virtuallibrary.ui.screens.search.SearchListScreen
 import com.samuelkiszka.virtuallibrary.ui.screens.search.SearchListViewModel
@@ -68,10 +71,25 @@ fun VirtualLibraryNavGraph(
             )
         }
         composable(
-            route = SearchDetailDestination.route
+            route = AddEditBookDestination.route
         ) {
-            SearchDetailScreen(
-                navController = navController
+            val viewModel: AddEditBookViewModel = viewModel(factory = AddEditBookViewModel.Factory)
+            AddEditBookScreen(
+                navController = navController,
+                viewModel = viewModel
+            )
+        }
+        composable(
+            route = AddEditBookDestination.routeWithArgs,
+            arguments = listOf(navArgument(AddEditBookDestination.ARGS) {
+                type = NavType.StringType
+            })
+        ) {
+            val viewModel: AddEditBookViewModel = viewModel(factory = AddEditBookViewModel.Factory)
+            viewModel.populateData()
+            AddEditBookScreen(
+                navController = navController,
+                viewModel = viewModel
             )
         }
     }

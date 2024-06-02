@@ -2,6 +2,8 @@ package com.samuelkiszka.virtuallibrary.data.models
 
 import BooksWrapperSerializer
 import kotlinx.serialization.Serializable
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 //
 // Retrieve books by isbn
@@ -25,8 +27,22 @@ data class BookApiModel (
     var authors: ArrayList<Authors> = arrayListOf(),
     var number_of_pages: Int = 0,
     var publish_date: String = "",
-    var cover: Cover? = null
-)
+    var cover: Cover = Cover()
+) {
+    fun getJsonUrlEncoded(): String {
+        val data = """
+            {
+                "title":"$title",
+                "author":"${authors[0].name}",
+                "yearPublished":"$publish_date",
+                "numberOfPages":$number_of_pages,
+                "notes":"",
+                "coverUrl":"${cover.medium}"
+            }
+        """
+        return URLEncoder.encode(data, StandardCharsets.UTF_8.toString())
+    }
+}
 
 @Serializable(with = BooksWrapperSerializer::class)
 data class BooksWrapper (

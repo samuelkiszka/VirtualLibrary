@@ -1,14 +1,13 @@
 package com.samuelkiszka.virtuallibrary.ui.screens.search
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
+import android.content.Context
+import android.view.View
+import android.view.inputmethod.InputMethodManager
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -27,7 +26,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
@@ -71,8 +69,15 @@ fun SearchListScreen(
     ) { innerPadding ->
         SearchListBody(
             viewModel = viewModel,
-            onItemClicked = {
-                navController.navigate(SearchDetailDestination.route)
+            onBookClicked = {
+                navController.navigate(
+                    "${AddEditBookDestination.route}/${it}"
+                )
+            },
+            onAddButtonClicked = {
+                navController.navigate(
+                    AddEditBookDestination.route
+                )
             },
             modifier = Modifier.padding(
                 bottom = innerPadding.calculateBottomPadding(),
@@ -85,7 +90,8 @@ fun SearchListScreen(
 @Composable
 fun SearchListBody(
     viewModel: SearchListViewModel,
-    onItemClicked: (String) -> Unit,
+    onBookClicked: (String) -> Unit,
+    onAddButtonClicked: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column (
@@ -103,10 +109,10 @@ fun SearchListBody(
             is SearchListUiState.Error -> ErrorScreen()
             is SearchListUiState.Success -> SearchBookList(
                 bookList = (viewModel.searchListUiState as SearchListUiState.Success).bookList,
-                onItemClicked = onItemClicked
+                onBookClicked = onBookClicked
             )
             is SearchListUiState.Empty -> AddNewBookText(
-                onButtonClicked = onItemClicked
+                onAddButtonClicked = onAddButtonClicked
             )
         }
     }
@@ -134,7 +140,7 @@ fun ErrorScreen(
 
 @Composable
 fun AddNewBookText(
-    onButtonClicked: (String) -> Unit,
+    onAddButtonClicked: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -155,7 +161,7 @@ fun AddNewBookText(
          )
         IconButton(
             onClick = {
-                onButtonClicked("0")
+                onAddButtonClicked()
             }
         ) {
             Icon(
@@ -171,7 +177,7 @@ fun AddNewBookText(
 @Composable
 fun SearchBookList(
     bookList: List<BookApiModel>,
-    onItemClicked: (String) -> Unit,
+    onBookClicked: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
@@ -185,7 +191,7 @@ fun SearchBookList(
                 book = it,
                 modifier = Modifier
                     .clickable {
-                        onItemClicked(it.title)
+                        onBookClicked(it.getJsonUrlEncoded())
                     }
             )
         }

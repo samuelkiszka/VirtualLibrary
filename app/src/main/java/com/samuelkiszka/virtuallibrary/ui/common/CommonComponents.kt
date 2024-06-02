@@ -52,13 +52,6 @@ fun VirtualLibrarySearchBar(
                 contentDescription = null
             )
         },
-        trailingIcon = {
-            Icon(
-                imageVector = Icons.Default.List,
-                tint = MaterialTheme.colorScheme.onSurface,
-                contentDescription = null
-            )
-        },
         content = {},
         active = false,
         onActiveChange = {},

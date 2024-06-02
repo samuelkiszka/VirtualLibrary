@@ -6,7 +6,7 @@
     <string name="collection_list_screen_name">Collections</string>
     <string name="collection_detail_screen_name">Collection Detail</string>
     <string name="search_list_screen_name">Search</string>
-    <string name="search_detail_screen_name">Add new book</string>
+    <string name="add_edit_book_screen_name">Add new book</string>
 
     <string name="back_button">Back</string>
     <string name="add_book_button">Add Book</string>

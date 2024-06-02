@@ -82,8 +82,11 @@ dependencies {
     // Coil
     implementation(libs.coil.compose.v260)
 
-    //Room
+    // Room
     implementation("androidx.room:room-runtime:${rootProject.extra["room_version"]}")
     ksp("androidx.room:room-compiler:${rootProject.extra["room_version"]}")
     implementation("androidx.room:room-ktx:${rootProject.extra["room_version"]}")
+
+    // Gson
+    implementation("com.google.code.gson:gson:2.8.9")
 }

@@ -1,13 +1,14 @@
 package com.samuelkiszka.virtuallibrary.ui.screens.search
 
+import android.content.Context
+import android.view.View
+import android.view.inputmethod.InputMethodManager
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -16,36 +17,35 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.pointer.PointerIcon.Companion.Text
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.samuelkiszka.virtuallibrary.R
-import com.samuelkiszka.virtuallibrary.ui.common.VirtualLibraryBottomBar
 import com.samuelkiszka.virtuallibrary.ui.common.VirtualLibraryTopBar
 import com.samuelkiszka.virtuallibrary.ui.navigation.NavigationDestination
-import com.samuelkiszka.virtuallibrary.ui.theme.VirtualLibraryTheme
 
-object SearchDetailDestination : NavigationDestination {
-    override val route = "SearchDetail"
-    override val titleRes = R.string.search_detail_screen_name
+object AddEditBookDestination : NavigationDestination {
+    override val route = "AddEditBook"
+    override val titleRes = R.string.add_edit_book_screen_name
+    const val ARGS = "data"
+    val routeWithArgs = "$route/{$ARGS}"
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SearchDetailScreen(
-    navController: NavHostController = NavHostController(LocalContext.current)
+fun AddEditBookScreen(
+    navController: NavHostController = NavHostController(LocalContext.current),
+    viewModel: AddEditBookViewModel
 ) {
     Scaffold(
         topBar = {
             VirtualLibraryTopBar(
-                screenTitleId = R.string.search_detail_screen_name,
+                screenTitleId = R.string.add_edit_book_screen_name,
                 canNavigateBack = true,
                 navigateBack = { navController.navigateUp() }
             )
@@ -55,6 +55,7 @@ fun SearchDetailScreen(
         }
     ) { innerPadding ->
         SearchDetailBody(
+            viewModel = viewModel,
             modifier = Modifier.padding(
                 bottom = innerPadding.calculateBottomPadding(),
                 top = innerPadding.calculateTopPadding()
@@ -65,6 +66,7 @@ fun SearchDetailScreen(
 
 @Composable
 fun SearchDetailBody(
+    viewModel: AddEditBookViewModel,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -72,19 +74,26 @@ fun SearchDetailBody(
             .padding(dimensionResource(id = R.dimen.padding_around))
             .fillMaxSize()
     ) {
-        Header()
-        ValueEditingFields()
+        Header(
+            viewModel
+        )
+        ValueEditingFields(
+            viewModel
+        )
     }
 }
 
 @Composable
-fun Header() {
+fun Header(
+    viewModel: AddEditBookViewModel,
+    modifier: Modifier = Modifier
+) {
     Row(
-        modifier = Modifier
+        modifier = modifier
     ) {
         AsyncImage(
             model = ImageRequest.Builder(context = LocalContext.current)
-                .data("")
+                .data(viewModel.addEditUiState.book.coverUrl)
                 .crossfade(true)
                 .build(),
             contentDescription = "",
@@ -99,49 +108,54 @@ fun Header() {
             modifier = Modifier
         ) {
             Text(
-                text = "Harry Potter and the Philosopher's Stone",
+                text = viewModel.title,
             )
             Text(
-                text = "J.K. Rowling",
+                text = viewModel.author,
             )
         }
     }
 }
 
 @Composable
-fun ValueEditingFields() {
-    Column() {
+fun ValueEditingFields(
+    viewModel: AddEditBookViewModel,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier
+    ) {
         OutlinedTextField(
-            value = "",
-            onValueChange = {},
+            value = viewModel.title,
+            onValueChange = { viewModel.updateTitle(it) },
             label = { Text("Title") },
             modifier = Modifier
                 .fillMaxWidth()
         )
         OutlinedTextField(
-            value = "",
-            onValueChange = {},
+            value = viewModel.author,
+            onValueChange = { viewModel.updateAuthor(it) },
             label = { Text("Author") },
             modifier = Modifier
                 .fillMaxWidth()
         )
         OutlinedTextField(
-            value = "",
-            onValueChange = {},
+            value = viewModel.yearPublished,
+            onValueChange = { viewModel.updateYearPublished(it) },
             label = { Text("Year published") },
             modifier = Modifier
                 .fillMaxWidth()
         )
         OutlinedTextField(
-            value = "",
-            onValueChange = {},
+            value = viewModel.numberOfPages.toString(),
+            onValueChange = { viewModel.updateNumberOfPages(it) },
             label = { Text("Number of pages") },
             modifier = Modifier
                 .fillMaxWidth()
         )
         OutlinedTextField(
-            value = "",
-            onValueChange = {},
+            value = viewModel.notes,
+            onValueChange = { viewModel.updateNotes(it) },
             label = { Text("Notes") },
             modifier = Modifier
                 .fillMaxWidth()
@@ -160,13 +174,5 @@ fun SaveButton(
             .fillMaxWidth()
     ) {
         Text("Save")
-    }
-}
-
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun SearchDetailScreenPreview() {
-    VirtualLibraryTheme {
-        SearchDetailScreen()
     }
 }
