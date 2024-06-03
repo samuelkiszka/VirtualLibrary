@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.List
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -65,16 +66,20 @@ fun VirtualLibrarySearchBar(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun VirtualLibraryTopBar(
-    screenTitleId: Int,
+    screenTitleId: Int = 0,
     modifier: Modifier = Modifier,
+    screenTitle: String? = null,
     canNavigateBack: Boolean = false,
     navigateBack: () -> Unit = {},
+    haveOptions: Boolean = false,
+    options: @Composable () -> Unit = {},
     scrollBehavior: TopAppBarScrollBehavior? = null
 ) {
     CenterAlignedTopAppBar(
         title = {
             Text(
-                text = stringResource(screenTitleId),
+                text = screenTitle ?: stringResource(screenTitleId),
+                style = MaterialTheme.typography.headlineMedium
             )
         },
         navigationIcon = {
@@ -88,7 +93,18 @@ fun VirtualLibraryTopBar(
             }
         },
         scrollBehavior = scrollBehavior,
-        modifier = modifier
+        modifier = modifier,
+        actions = {
+            if (haveOptions) {
+                IconButton(onClick = { /*TODO*/ }) {
+                    Icon(
+                        imageVector = Icons.Filled.MoreVert,
+                        contentDescription = stringResource(R.string.option_button)
+                    )
+                }
+            }
+
+        }
     )
 }
 

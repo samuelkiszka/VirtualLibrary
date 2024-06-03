@@ -89,4 +89,7 @@ dependencies {
 
     // Gson
     implementation("com.google.code.gson:gson:2.8.9")
+
+    // Rating Bar
+    implementation("com.github.a914-gowtham:compose-ratingbar:1.3.12")
 }

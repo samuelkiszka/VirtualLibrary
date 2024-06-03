@@ -1,5 +1,6 @@
 <resources>
-    <dimen name="padding_around">8dp</dimen>"
+    <dimen name="padding_around">8dp</dimen>
+    <dimen name="padding_extra_little">3dp</dimen>
     <dimen name="padding_little">5dp</dimen>
     <dimen name="padding_small">8dp</dimen>
     <dimen name="padding_medium">16dp</dimen>
@@ -9,4 +10,9 @@
     <!-- List card values -->
     <dimen name="list_image_width">74sp</dimen>
     <dimen name="list_card_height">110sp</dimen>
+
+    <!-- Detail values -->
+    <dimen name="detail_image_height">211sp</dimen>
+    <dimen name="detail_image_width">150sp</dimen>
+    <dimen name="detail_date_picker_height">50sp</dimen>
 </resources>
