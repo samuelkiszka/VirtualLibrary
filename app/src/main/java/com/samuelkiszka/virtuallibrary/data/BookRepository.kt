@@ -1,17 +1,19 @@
 package com.samuelkiszka.virtuallibrary.data
 
-import com.samuelkiszka.virtuallibrary.data.daos.BookDao
-import com.samuelkiszka.virtuallibrary.data.daos.CollectionDao
-import com.samuelkiszka.virtuallibrary.data.entities.BookEntity
+import android.util.Log
+import com.samuelkiszka.virtuallibrary.data.database.daos.BookDao
+import com.samuelkiszka.virtuallibrary.data.database.daos.CollectionDao
+import com.samuelkiszka.virtuallibrary.data.database.entities.BookEntity
 import com.samuelkiszka.virtuallibrary.data.models.BookApiModel
 import com.samuelkiszka.virtuallibrary.data.models.BookListModel
-import com.samuelkiszka.virtuallibrary.network.BookApiService
+import com.samuelkiszka.virtuallibrary.data.network.BookApiService
 import kotlinx.coroutines.flow.Flow
 
 interface BookRepository {
     suspend fun getIsbnList(query: String): List<String>
     suspend fun getBooksByQuery(query: String): List<BookApiModel>
     suspend fun saveBook(book: BookEntity): Long
+    suspend fun updateBook(book: BookEntity)
     fun getBookByIdStream(id: Long): Flow<BookEntity?>
     fun getBookListStream(): Flow<List<BookListModel>>
 }
@@ -45,6 +47,16 @@ class DefaultBookRepository(
 
     override suspend fun saveBook(book: BookEntity): Long {
         return bookDao.insertBook(book)
+    }
+
+    override suspend fun updateBook(book: BookEntity) {
+        Log.d("API", book.toString())
+        bookDao.updateBook(
+            id = book.id,
+            rating = book.rating,
+            pagesRead = book.pagesRead,
+            notes = book.notes
+        )
     }
 
     override fun getBookByIdStream(id: Long): Flow<BookEntity?> {

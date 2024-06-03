@@ -1,4 +1,4 @@
-package com.samuelkiszka.virtuallibrary.data.daos
+package com.samuelkiszka.virtuallibrary.data.database.daos
 
 import androidx.room.Dao
 

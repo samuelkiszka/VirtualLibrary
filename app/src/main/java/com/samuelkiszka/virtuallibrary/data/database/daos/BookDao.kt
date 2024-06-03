@@ -1,10 +1,10 @@
-package com.samuelkiszka.virtuallibrary.data.daos
+package com.samuelkiszka.virtuallibrary.data.database.daos
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.samuelkiszka.virtuallibrary.data.entities.BookEntity
+import com.samuelkiszka.virtuallibrary.data.database.entities.BookEntity
 import com.samuelkiszka.virtuallibrary.data.models.BookListModel
 import kotlinx.coroutines.flow.Flow
 
@@ -12,6 +12,13 @@ import kotlinx.coroutines.flow.Flow
 interface BookDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertBook(book: BookEntity): Long
+
+    @Query("""
+        UPDATE books
+        SET rating = :rating, pagesRead = :pagesRead, notes = :notes
+        WHERE id = :id
+    """)
+    suspend fun updateBook(id: Long, rating: Float, pagesRead: Int, notes: String)
 
     @Query("""
         SELECT id, title, author, coverUrl

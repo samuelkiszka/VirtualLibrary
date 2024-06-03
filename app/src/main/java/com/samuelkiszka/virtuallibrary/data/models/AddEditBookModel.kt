@@ -1,7 +1,7 @@
 package com.samuelkiszka.virtuallibrary.data.models
 
 import com.google.gson.Gson
-import com.samuelkiszka.virtuallibrary.data.entities.BookEntity
+import com.samuelkiszka.virtuallibrary.data.database.entities.BookEntity
 import java.net.URLDecoder
 import java.nio.charset.StandardCharsets
 

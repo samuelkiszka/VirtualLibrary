@@ -1,22 +1,33 @@
-package com.samuelkiszka.virtuallibrary.data.entities
+package com.samuelkiszka.virtuallibrary.data.database.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverter
+import com.samuelkiszka.virtuallibrary.ui.screens.library.LibraryDetailUiState
 import org.jetbrains.annotations.NotNull
 
 @Entity(tableName = "books")
 data class BookEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
+    val isbn: String = "",
     val title: String = "",
     val author: String = "",
     val yearPublished: String = "",
     val numberOfPages: Int = 0,
     val notes: String = "",
     val coverUrl: String = "",
-    val readingStatus: ReadingStatus = ReadingStatus.NOT_STARTED
-)
+    val readingStatus: ReadingStatus = ReadingStatus.NOT_STARTED,
+    val pagesRead: Int = 0,
+    val rating: Float = 0f
+){
+    fun toLibraryDetailUiState(changed: Boolean = false): LibraryDetailUiState {
+        return LibraryDetailUiState(
+            book = this,
+            changed = changed
+        )
+    }
+}
 
 enum class ReadingStatus {
     NOT_STARTED,

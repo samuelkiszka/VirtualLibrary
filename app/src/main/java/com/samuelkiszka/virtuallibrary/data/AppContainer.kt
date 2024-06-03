@@ -2,7 +2,7 @@ package com.samuelkiszka.virtuallibrary.data
 
 import android.content.Context
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
-import com.samuelkiszka.virtuallibrary.network.BookApiService
+import com.samuelkiszka.virtuallibrary.data.network.BookApiService
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import retrofit2.Retrofit

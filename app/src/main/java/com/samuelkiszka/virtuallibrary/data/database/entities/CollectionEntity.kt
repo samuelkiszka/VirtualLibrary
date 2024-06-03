@@ -1,4 +1,4 @@
-package com.samuelkiszka.virtuallibrary.data.entities
+package com.samuelkiszka.virtuallibrary.data.database.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

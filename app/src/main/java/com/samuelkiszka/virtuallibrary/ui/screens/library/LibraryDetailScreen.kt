@@ -1,7 +1,6 @@
 package com.samuelkiszka.virtuallibrary.ui.screens.library
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -12,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -38,6 +36,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -58,10 +57,12 @@ import coil.request.ImageRequest
 import com.gowtham.ratingbar.RatingBar
 import com.gowtham.ratingbar.RatingBarStyle
 import com.samuelkiszka.virtuallibrary.R
-import com.samuelkiszka.virtuallibrary.data.entities.BookEntity
+import com.samuelkiszka.virtuallibrary.data.database.entities.BookEntity
 import com.samuelkiszka.virtuallibrary.ui.common.VirtualLibraryTopBar
 import com.samuelkiszka.virtuallibrary.ui.navigation.NavigationDestination
 import com.samuelkiszka.virtuallibrary.ui.theme.VirtualLibraryTheme
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 
 object LibraryDetailDestination : NavigationDestination {
     override val route = "LibraryDetail"
@@ -76,20 +77,24 @@ fun LibraryDetailScreen(
     navController: NavHostController = NavHostController(LocalContext.current),
     viewModel: LibraryDetailViewModel = viewModel(factory = LibraryDetailViewModel.Factory),
 ) {
-    val uiState = viewModel.uiState.collectAsState()
+    val coroutineScope = rememberCoroutineScope()
     Scaffold(
         topBar = {
             VirtualLibraryTopBar(
-                screenTitle = uiState.value.book.title,
+                screenTitle = viewModel.uiState.book.title,
                 canNavigateBack = true,
                 navigateBack = { navController.navigateUp() },
                 haveOptions = true
             )
         },
         bottomBar = {
-            if(true){
+            if(viewModel.uiState.changed) {
                 Button(
-                    onClick = { /*TODO*/ },
+                    onClick = {
+                        coroutineScope.launch {
+                            viewModel.saveChanges()
+                        }
+                    },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = MaterialTheme.colorScheme.primaryContainer,
                         contentColor = MaterialTheme.colorScheme.onPrimaryContainer
@@ -108,7 +113,8 @@ fun LibraryDetailScreen(
         }
     ) { innerPadding ->
         LibraryDetailBody(
-            book = uiState.value.book,
+            book = viewModel.uiState.book,
+            onItemValueChange =viewModel::updateUiState,
             modifier = Modifier.padding(
                 bottom = innerPadding.calculateBottomPadding(),
                 top = innerPadding.calculateTopPadding()
@@ -120,6 +126,7 @@ fun LibraryDetailScreen(
 @Composable
 fun LibraryDetailBody(
     book: BookEntity,
+    onItemValueChange: (BookEntity) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val scrollState = rememberScrollState()
@@ -130,7 +137,8 @@ fun LibraryDetailBody(
             .verticalScroll(scrollState)
     ){
         Header(
-            book = book
+            book = book,
+            onItemValueChange = onItemValueChange
         )
         Collections()
         ReadingProgress(
@@ -148,6 +156,7 @@ fun LibraryDetailBody(
 @Composable
 fun Header(
     book: BookEntity,
+    onItemValueChange: (BookEntity) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -181,7 +190,10 @@ fun Header(
                 modifier = Modifier
                     .align(Alignment.BottomStart)
             ){
-                Rate()
+                Rating(
+                    book,
+                    onItemValueChange = onItemValueChange
+                )
             }
         }
     }
@@ -214,10 +226,11 @@ fun Info(
 }
 
 @Composable
-fun Rate(
+fun Rating(
+    bookEntity: BookEntity,
+    onItemValueChange: (BookEntity) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var rating: Float by remember { mutableStateOf(3.2f) }
     Column(
         modifier = modifier
     ) {
@@ -226,12 +239,12 @@ fun Rate(
             style = MaterialTheme.typography.labelLarge
         )
         RatingBar(
-            value = rating,
+            value = bookEntity.rating,
             style = RatingBarStyle.Stroke(
                 strokeColor = Color.Black
             ),
             onValueChange = {
-                rating = it
+                onItemValueChange(bookEntity.copy(rating = it))
             },
             size = 24.dp
         ) {

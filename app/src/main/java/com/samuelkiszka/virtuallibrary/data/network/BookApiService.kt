@@ -1,4 +1,4 @@
-package com.samuelkiszka.virtuallibrary.network
+package com.samuelkiszka.virtuallibrary.data.network
 
 import com.samuelkiszka.virtuallibrary.data.models.BooksWrapper
 import com.samuelkiszka.virtuallibrary.data.models.ListOfWorks
