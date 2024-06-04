@@ -50,12 +50,13 @@ class DefaultBookRepository(
     }
 
     override suspend fun updateBook(book: BookEntity) {
-        Log.d("API", book.toString())
         bookDao.updateBook(
             id = book.id,
             rating = book.rating,
             pagesRead = book.pagesRead,
-            notes = book.notes
+            notes = book.notes,
+            startDate = book.startDate,
+            endDate = book.endDate
         )
     }
 

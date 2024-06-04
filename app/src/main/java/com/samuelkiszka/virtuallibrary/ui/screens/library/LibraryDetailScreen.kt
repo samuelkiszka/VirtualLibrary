@@ -12,9 +12,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -22,15 +25,20 @@ import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -47,7 +55,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -113,8 +123,7 @@ fun LibraryDetailScreen(
         }
     ) { innerPadding ->
         LibraryDetailBody(
-            book = viewModel.uiState.book,
-            onItemValueChange =viewModel::updateUiState,
+            viewModel = viewModel,
             modifier = Modifier.padding(
                 bottom = innerPadding.calculateBottomPadding(),
                 top = innerPadding.calculateTopPadding()
@@ -123,13 +132,29 @@ fun LibraryDetailScreen(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LibraryDetailBody(
-    book: BookEntity,
-    onItemValueChange: (BookEntity) -> Unit,
+    viewModel: LibraryDetailViewModel,
     modifier: Modifier = Modifier
 ) {
     val scrollState = rememberScrollState()
+    DateDialogBox(
+        showDateDialog = viewModel.showStartDatePicker,
+        changeDialogDateBox = viewModel::changeStartDatePickerVisibility,
+        changedDate = viewModel.startDate,
+        saveChanges = {
+            viewModel.updateStartDate(viewModel.startDate.selectedDateMillis ?: 0)
+        }
+    )
+    DateDialogBox(
+        showDateDialog = viewModel.showEndDatePicker,
+        changeDialogDateBox = viewModel::changeEndDatePickerVisibility,
+        changedDate = viewModel.endDate,
+        saveChanges = {
+            viewModel.updateEndDate(viewModel.endDate.selectedDateMillis ?: 0)
+        }
+    )
     Column(
         modifier = modifier
             .padding(dimensionResource(id = R.dimen.padding_around))
@@ -137,15 +162,20 @@ fun LibraryDetailBody(
             .verticalScroll(scrollState)
     ){
         Header(
-            book = book,
-            onItemValueChange = onItemValueChange
+            book = viewModel.uiState.book,
+            updateRating = viewModel::updateRating
         )
         Collections()
         ReadingProgress(
-            book = book
+            book = viewModel.uiState.book,
+            duration = viewModel.duration,
+            showStartDateDialog = viewModel::changeStartDatePickerVisibility,
+            showEndDateDialog = viewModel::changeEndDatePickerVisibility,
+            updatePagesRead = viewModel::updatePagesRead
         )
         Notes(
-            book.notes,
+            viewModel.uiState.book.notes,
+            updateNotes = viewModel::updateNotes,
             modifier = Modifier
                 .weight(1f)
                 .fillMaxHeight()
@@ -156,7 +186,7 @@ fun LibraryDetailBody(
 @Composable
 fun Header(
     book: BookEntity,
-    onItemValueChange: (BookEntity) -> Unit,
+    updateRating: (Float) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -192,7 +222,7 @@ fun Header(
             ){
                 Rating(
                     book,
-                    onItemValueChange = onItemValueChange
+                    updateRating = updateRating
                 )
             }
         }
@@ -228,7 +258,7 @@ fun Info(
 @Composable
 fun Rating(
     bookEntity: BookEntity,
-    onItemValueChange: (BookEntity) -> Unit,
+    updateRating: (Float) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -244,7 +274,7 @@ fun Rating(
                 strokeColor = Color.Black
             ),
             onValueChange = {
-                onItemValueChange(bookEntity.copy(rating = it))
+                updateRating(it)
             },
             size = 24.dp
         ) {
@@ -319,6 +349,10 @@ fun Collections(
 @Composable
 fun ReadingProgress(
     book: BookEntity,
+    duration: Int,
+    showStartDateDialog: ()->Unit,
+    showEndDateDialog: ()->Unit,
+    updatePagesRead: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -337,8 +371,10 @@ fun ReadingProgress(
                 .fillMaxWidth()
         ) {
             Slider(
-                value = 300f,
-                onValueChange = {},
+                value = book.pagesRead.toFloat(),
+                onValueChange = {
+                    updatePagesRead(it.toInt())
+                },
                 valueRange = 0f..book.numberOfPages.toFloat(),
                 colors = SliderDefaults.colors(
                     thumbColor = MaterialTheme.colorScheme.primary,
@@ -348,16 +384,22 @@ fun ReadingProgress(
                 modifier = Modifier
                     .weight(1f)
             )
-            OutlinedTextField(
-                value = "20",
-                onValueChange = {},
+            BasicTextField(
+                value = book.pagesRead.toString(),
+                onValueChange = {
+                    val num = it.toIntOrNull() ?: 0
+                    updatePagesRead(if (num < book.numberOfPages) num else book.numberOfPages)
+                },
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Number,
                     imeAction = androidx.compose.ui.text.input.ImeAction.Done
                 ),
+                textStyle = MaterialTheme.typography.titleLarge.copy(
+                    textAlign = TextAlign.Center
+                ),
                 modifier = Modifier
                     .height(30.dp)
-                    .width(50.dp)
+                    .width(60.dp)
                     .background(
                         color = Color.White,
                         shape = MaterialTheme.shapes.extraSmall,
@@ -366,25 +408,31 @@ fun ReadingProgress(
             Text(
                 text = "/${book.numberOfPages}",
                 style = MaterialTheme.typography.titleLarge,
+                modifier = Modifier
+                    .padding(
+                        start = dimensionResource(id = R.dimen.padding_extra_little)
+                    )
             )
         }
-        Row() {
+        Row {
             ShowDate(
                 pickerName = "Start reading",
-                date = "10/12/2021",
+                onDateClick = showStartDateDialog,
+                date = book.startDate,
                 modifier = Modifier
                     .padding(dimensionResource(id = R.dimen.padding_extra_little))
                     .weight(1.5f)
             )
             ShowDate(
                 pickerName = "End reading",
-                date = "18/12/2021",
+                onDateClick = showEndDateDialog,
+                date = book.endDate,
                 modifier = Modifier
                     .padding(dimensionResource(id = R.dimen.padding_extra_little))
                     .weight(1.5f)
             )
             ReadingDuration(
-                duration = 365,
+                duration = duration,
                 modifier = Modifier
                     .weight(1f)
                     .padding(dimensionResource(id = R.dimen.padding_extra_little))
@@ -396,6 +444,7 @@ fun ReadingProgress(
 @Composable
 fun ShowDate(
     pickerName: String,
+    onDateClick: ()->Unit,
     date: String,
     modifier: Modifier = Modifier
 ) {
@@ -403,7 +452,7 @@ fun ShowDate(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
             .clickable(
-                onClick = { /*TODO*/ }
+                onClick = onDateClick
             )
             .background(
                 color = MaterialTheme.colorScheme.primaryContainer,
@@ -422,10 +471,12 @@ fun ShowDate(
             modifier = Modifier
                 .fillMaxWidth()
         ) {
-            Text(
-                text = date,
-                color = MaterialTheme.colorScheme.onPrimaryContainer,
-            )
+            if (date.isNotEmpty()) {
+                Text(
+                    text = date,
+                    color = MaterialTheme.colorScheme.onPrimaryContainer,
+                )
+            }
             Icon(
                 imageVector = Icons.Filled.DateRange,
                 contentDescription = stringResource(R.string.date_picker),
@@ -436,6 +487,47 @@ fun ShowDate(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DateDialogBox(showDateDialog: Boolean,
+                  changeDialogDateBox: ()->Unit,
+                  changedDate: DatePickerState,
+                  saveChanges: ()->Unit
+) {
+    if(showDateDialog) {
+        Column {
+            DatePickerDialog(
+                onDismissRequest = { changeDialogDateBox() },
+                confirmButton = {
+                    Button(
+                        onClick = {
+                            saveChanges()
+                            changeDialogDateBox()
+                        }
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.save_button_text)
+                        )
+                    }
+                },
+                dismissButton = {
+                    Button(
+                        onClick = {
+                            changeDialogDateBox()
+                        }
+                    ) {
+                        Text(text = stringResource(id = R.string.cancel_button_text))
+                    }
+                },
+                content = {
+                    DatePicker(
+                        state = changedDate
+                    )
+                }
+            )
+        }
+    }
+}
 @Composable
 fun ReadingDuration(
     duration: Int,
@@ -452,11 +544,11 @@ fun ReadingDuration(
             .height(dimensionResource(id = R.dimen.detail_date_picker_height))
     ) {
         Text(
-            text = "Reading",
+            text = "Days",
             color = MaterialTheme.colorScheme.onPrimaryContainer,
         )
         Text(
-            text = "$duration days",
+            text = if (duration != -1) "$duration" else "Not yet!",
             color = MaterialTheme.colorScheme.onPrimaryContainer,
         )
     }
@@ -465,11 +557,14 @@ fun ReadingDuration(
 @Composable
 fun Notes(
     notes: String,
+    updateNotes: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     OutlinedTextField(
         value = notes,
-        onValueChange = {},
+        onValueChange = {
+            updateNotes(it)
+        },
         label = {
             Text(
                 text = "Notes"

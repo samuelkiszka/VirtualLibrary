@@ -19,6 +19,8 @@ data class BookEntity(
     val coverUrl: String = "",
     val readingStatus: ReadingStatus = ReadingStatus.NOT_STARTED,
     val pagesRead: Int = 0,
+    val startDate: String = "",
+    val endDate: String = "",
     val rating: Float = 0f
 ){
     fun toLibraryDetailUiState(changed: Boolean = false): LibraryDetailUiState {

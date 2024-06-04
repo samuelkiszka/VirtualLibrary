@@ -15,10 +15,10 @@ interface BookDao {
 
     @Query("""
         UPDATE books
-        SET rating = :rating, pagesRead = :pagesRead, notes = :notes
+        SET rating = :rating, pagesRead = :pagesRead, notes = :notes, startDate = :startDate, endDate = :endDate
         WHERE id = :id
     """)
-    suspend fun updateBook(id: Long, rating: Float, pagesRead: Int, notes: String)
+    suspend fun updateBook(id: Long, rating: Float, pagesRead: Int, notes: String, startDate: String, endDate: String)
 
     @Query("""
         SELECT id, title, author, coverUrl
