@@ -21,6 +21,12 @@ interface BookDao {
     suspend fun updateBook(id: Long, rating: Float, pagesRead: Int, notes: String, startDate: String, endDate: String)
 
     @Query("""
+        DELETE FROM books
+        WHERE id = :id
+    """)
+    suspend fun deleteBook(id: Long)
+
+    @Query("""
         SELECT id, title, author, coverUrl
         FROM books
         ORDER BY title ASC

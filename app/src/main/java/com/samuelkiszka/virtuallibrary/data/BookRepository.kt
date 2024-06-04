@@ -14,6 +14,7 @@ interface BookRepository {
     suspend fun getBooksByQuery(query: String): List<BookApiModel>
     suspend fun saveBook(book: BookEntity): Long
     suspend fun updateBook(book: BookEntity)
+    suspend fun deleteBook(book: BookEntity)
     fun getBookByIdStream(id: Long): Flow<BookEntity?>
     fun getBookListStream(): Flow<List<BookListModel>>
 }
@@ -58,6 +59,10 @@ class DefaultBookRepository(
             startDate = book.startDate,
             endDate = book.endDate
         )
+    }
+
+    override suspend fun deleteBook(book: BookEntity) {
+        bookDao.deleteBook(book.id)
     }
 
     override fun getBookByIdStream(id: Long): Flow<BookEntity?> {

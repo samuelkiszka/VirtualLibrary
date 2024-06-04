@@ -23,11 +23,15 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DatePickerState
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -68,6 +72,7 @@ import com.gowtham.ratingbar.RatingBar
 import com.gowtham.ratingbar.RatingBarStyle
 import com.samuelkiszka.virtuallibrary.R
 import com.samuelkiszka.virtuallibrary.data.database.entities.BookEntity
+import com.samuelkiszka.virtuallibrary.ui.common.DefaultAlertDialog
 import com.samuelkiszka.virtuallibrary.ui.common.VirtualLibraryTopBar
 import com.samuelkiszka.virtuallibrary.ui.navigation.NavigationDestination
 import com.samuelkiszka.virtuallibrary.ui.theme.VirtualLibraryTheme
@@ -94,7 +99,38 @@ fun LibraryDetailScreen(
                 screenTitle = viewModel.uiState.book.title,
                 canNavigateBack = true,
                 navigateBack = { navController.navigateUp() },
-                haveOptions = true
+                haveOptions = true,
+                onOptionClick = viewModel::toggleDropdownMenu,
+                options = {
+                    DropdownMenu(
+                        expanded = viewModel.dropdownMenuExpanded,
+                        onDismissRequest = viewModel::toggleDropdownMenu
+                    ) {
+                        DropdownMenuItem(
+                            text = {
+                                Text(
+                                    text = "Edit",
+                                    style = MaterialTheme.typography.titleMedium
+                                )
+                            },
+                            onClick = {
+
+                            }
+                        )
+                        DropdownMenuItem(
+                            text = {
+                                Text(
+                                    text = "Delete",
+                                    style = MaterialTheme.typography.titleMedium
+                                )
+                            },
+                            onClick = {
+                                viewModel.toggleDropdownMenu()
+                                viewModel.toggleDeleteAlert()
+                            }
+                        )
+                    }
+                }
             )
         },
         bottomBar = {
@@ -124,6 +160,7 @@ fun LibraryDetailScreen(
     ) { innerPadding ->
         LibraryDetailBody(
             viewModel = viewModel,
+            navigateUp = { navController.navigateUp() },
             modifier = Modifier.padding(
                 bottom = innerPadding.calculateBottomPadding(),
                 top = innerPadding.calculateTopPadding()
@@ -136,9 +173,22 @@ fun LibraryDetailScreen(
 @Composable
 fun LibraryDetailBody(
     viewModel: LibraryDetailViewModel,
+    navigateUp: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val scrollState = rememberScrollState()
+    DefaultAlertDialog(
+        showDialogue = viewModel.showDeleteAlert,
+        onDismissRequest = viewModel::toggleDeleteAlert,
+        onConfirmation = {
+            viewModel.deleteBook()
+            viewModel.toggleDeleteAlert()
+            navigateUp()
+        },
+        dialogTitle = stringResource(id = R.string.book_delete_title),
+        dialogText = stringResource(id = R.string.book_delete_text).format(viewModel.uiState.book.title),
+        icon = Icons.Filled.Delete
+    )
     DateDialogBox(
         showDateDialog = viewModel.showStartDatePicker,
         changeDialogDateBox = viewModel::changeStartDatePickerVisibility,

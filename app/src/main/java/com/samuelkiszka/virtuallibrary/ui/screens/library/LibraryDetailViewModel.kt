@@ -1,7 +1,6 @@
 package com.samuelkiszka.virtuallibrary.ui.screens.library
 
 import DateUtils
-import android.util.Log
 import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.getValue
@@ -36,6 +35,12 @@ class LibraryDetailViewModel(
     private val id: Long = checkNotNull(savedStateHandle[LibraryDetailDestination.ARGS])
 
     var uiState by mutableStateOf(LibraryDetailUiState())
+        private set
+
+    var dropdownMenuExpanded by mutableStateOf(false)
+        private set
+
+    var showDeleteAlert by mutableStateOf(false)
         private set
 
     @OptIn(ExperimentalMaterial3Api::class)
@@ -97,7 +102,6 @@ class LibraryDetailViewModel(
                 updateEndDate(System.currentTimeMillis())
             }
         }
-
     }
 
     fun updateNotes(newNotes: String) {
@@ -155,6 +159,14 @@ class LibraryDetailViewModel(
             }
     }
 
+    fun toggleDropdownMenu() {
+        dropdownMenuExpanded = !dropdownMenuExpanded
+    }
+
+    fun toggleDeleteAlert() {
+        showDeleteAlert = !showDeleteAlert
+    }
+
     private fun updateUiState(book: BookEntity) {
         uiState = LibraryDetailUiState(
             book = book,
@@ -168,6 +180,12 @@ class LibraryDetailViewModel(
                 uiState.book
             )
             uiState = uiState.copy(changed = false)
+        }
+    }
+
+     fun deleteBook() {
+        viewModelScope.launch {
+            bookRepository.deleteBook(uiState.book)
         }
     }
 
