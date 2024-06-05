@@ -25,4 +25,7 @@
     <string name="book_delete_title">Delete book</string>
     <string name="book_delete_text">Do you really want to delete book %1$s?</string>
     <string name="add_collection_text">You don\'t have any collections yet. Add one!</string>
+
+    <string name="collection_delete_title">Delete collection</string>
+    <string name="collection_delete_text">Do you really want to delete collection %1$s?</string>
 </resources>

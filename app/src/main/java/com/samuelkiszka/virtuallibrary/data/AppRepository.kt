@@ -3,10 +3,13 @@ package com.samuelkiszka.virtuallibrary.data
 import com.samuelkiszka.virtuallibrary.data.database.daos.BookDao
 import com.samuelkiszka.virtuallibrary.data.database.daos.CollectionDao
 import com.samuelkiszka.virtuallibrary.data.database.entities.BookEntity
+import com.samuelkiszka.virtuallibrary.data.database.entities.CollectionEntity
 import com.samuelkiszka.virtuallibrary.data.models.BookApiModel
 import com.samuelkiszka.virtuallibrary.data.models.BookListModel
+import com.samuelkiszka.virtuallibrary.data.models.CollectionListModel
 import com.samuelkiszka.virtuallibrary.data.network.BookApiService
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 interface AppRepository {
     suspend fun getIsbnList(query: String): List<String>
@@ -17,6 +20,12 @@ interface AppRepository {
     suspend fun deleteBook(book: BookEntity)
     fun getBookByIdStream(id: Long): Flow<BookEntity?>
     fun getBookListStream(): Flow<List<BookListModel>>
+
+    suspend fun addCollection(collection: CollectionEntity): Long
+    suspend fun updateCollection(collection: CollectionEntity): Long
+    suspend fun deleteCollection(collection: CollectionEntity)
+    fun getCollectionByIdStream(id: Long): Flow<CollectionEntity?>
+    fun getCollectionListStream(): Flow<List<CollectionListModel>>
 }
 
 class DefaultAppRepository(
@@ -84,5 +93,38 @@ class DefaultAppRepository(
 
     override fun getBookListStream(): Flow<List<BookListModel>> {
         return bookDao.getBookList()
+    }
+
+    override suspend fun addCollection(collection: CollectionEntity): Long {
+        return collectionDao.insertCollection(collection)
+    }
+
+    override suspend fun updateCollection(collection: CollectionEntity): Long {
+        collectionDao.updateCollection(
+            id = collection.id,
+            name = collection.name,
+            description = collection.description
+        )
+        return collection.id
+    }
+
+    override suspend fun deleteCollection(collection: CollectionEntity) {
+        collectionDao.deleteCollection(collection.id)
+    }
+
+    override fun getCollectionByIdStream(id: Long): Flow<CollectionEntity?> {
+        return collectionDao.getCollectionById(id)
+    }
+
+    override fun getCollectionListStream(): Flow<List<CollectionListModel>> {
+        return collectionDao.getCollectionList().map { collectionList ->
+            collectionList.map { collection ->
+                CollectionListModel(
+                    id = collection.id.toInt(),
+                    name = collection.name,
+                    books = emptyList()
+                )
+            }
+        }
     }
 }

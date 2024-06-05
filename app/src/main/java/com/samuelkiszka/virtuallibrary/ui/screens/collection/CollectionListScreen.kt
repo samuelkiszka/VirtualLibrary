@@ -10,10 +10,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -47,10 +51,34 @@ fun CollectionListScreen(
     navController: NavHostController = NavHostController(LocalContext.current),
     viewModel: CollectionListViewModel
 ) {
+    val uiState = viewModel.uiState.collectAsState()
     Scaffold(
         topBar = {
             VirtualLibraryTopBar(
-                screenTitleId = R.string.collection_list_screen_name
+                screenTitleId = R.string.collection_list_screen_name,
+                haveOptions = true,
+                onOptionClick = viewModel::toggleDropdownMenu,
+                options = {
+                     DropdownMenu(
+                         expanded = viewModel.dropdownMenuExpanded,
+                         onDismissRequest = viewModel::toggleDropdownMenu
+                     ) {
+                         DropdownMenuItem(
+                             text = {
+                                 Text(
+                                     text = "Add collection",
+                                     style = MaterialTheme.typography.titleMedium
+                                 )
+                             },
+                             onClick = {
+                                 viewModel.toggleDropdownMenu()
+                                 navController.navigate(
+                                     AddEditCollectionDestination.route
+                                 )
+                             }
+                         )
+                     }
+                }
             )
         },
         bottomBar = {
@@ -61,15 +89,17 @@ fun CollectionListScreen(
         }
     ) { innerPadding ->
         CollectionListBody(
-            collections = viewModel.uiState.collectionList,
+            collections = uiState.value.collectionList,
             onBookClicked = {
 
             },
             onCollectionClicked = {
-                navController.navigate(CollectionDetailDestination.route)
+                navController.navigate("${CollectionDetailDestination.route}/$it")
             },
             onNewCollectionClicked = {
-                navController.navigate("${AddEditCollectionDestination.route}/$it")
+                navController.navigate(
+                    AddEditCollectionDestination.route
+                )
             },
             modifier = Modifier.padding(
                 bottom = innerPadding.calculateBottomPadding(),

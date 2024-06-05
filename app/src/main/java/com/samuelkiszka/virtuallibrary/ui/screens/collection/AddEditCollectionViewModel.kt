@@ -1,5 +1,6 @@
 package com.samuelkiszka.virtuallibrary.ui.screens.collection
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -13,7 +14,6 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.samuelkiszka.virtuallibrary.VirtualLibraryApplication
 import com.samuelkiszka.virtuallibrary.data.AppRepository
-import com.samuelkiszka.virtuallibrary.data.models.AddEditBookModel
 import com.samuelkiszka.virtuallibrary.data.models.AddEditCollectionModel
 
 data class AddEditUiState(
@@ -27,12 +27,12 @@ class AddEditCollectionViewModel(
     var addEditUiState: AddEditUiState by mutableStateOf(AddEditUiState())
         private set
 
-    var args: Long? = savedStateHandle[AddEditCollectionDestination.ARGS]
+    var args: String? = savedStateHandle[AddEditCollectionDestination.ARGS]
 
     var id by mutableIntStateOf(0)
         private set
 
-    var title by mutableStateOf("")
+    var name by mutableStateOf("")
         private set
 
     var description by mutableStateOf("")
@@ -42,19 +42,35 @@ class AddEditCollectionViewModel(
         id = newId
     }
 
-    fun updateTitle(newTitle: String) {
-        title = newTitle
+    fun updateName(newTitle: String) {
+        name = newTitle
     }
 
     fun updateDescription(newDescription: String) {
         description = newDescription
     }
 
-    suspend fun saveCollection(): Long {
-        if (addEditUiState.collection.id != 0) {
-        } else {
+    fun populateData() {
+        if (!args.isNullOrEmpty()){
+            addEditUiState.collection = AddEditCollectionModel().fromJson(args!!)
         }
-        return -1
+        updateId(addEditUiState.collection.id)
+        updateName(addEditUiState.collection.name)
+        updateDescription(addEditUiState.collection.description)
+    }
+
+    suspend fun saveCollection(): Long {
+        val entity = AddEditCollectionModel(
+            id = id,
+            name = name,
+            description = description
+        ).toCollectionEntity()
+        if (id != 0) {
+            appRepository.updateCollection(entity)
+            return entity.id
+        } else {
+            return appRepository.addCollection(entity)
+        }
     }
 
     companion object {

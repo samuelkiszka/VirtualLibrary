@@ -76,8 +76,8 @@ fun VirtualLibrarySearchBar(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun VirtualLibraryTopBar(
-    screenTitleId: Int = 0,
     modifier: Modifier = Modifier,
+    screenTitleId: Int = 0,
     screenTitle: String? = null,
     canNavigateBack: Boolean = false,
     navigateBack: () -> Unit = {},

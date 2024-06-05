@@ -19,7 +19,7 @@ import com.samuelkiszka.virtuallibrary.data.database.entities.ReadingStatusConve
         CollectionEntity::class,
         CollectionBookEntity::class
     ],
-    version = 3,
+    version = 4,
     exportSchema = false
 )
 @TypeConverters(ReadingStatusConverter::class)

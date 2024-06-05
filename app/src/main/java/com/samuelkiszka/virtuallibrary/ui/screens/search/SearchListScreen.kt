@@ -214,7 +214,7 @@ fun SearchBookListCard(
         ) {
             AsyncImage(
                 model = ImageRequest.Builder(context = LocalContext.current)
-                    .data(book.cover?.medium)
+                    .data(book.cover.medium)
                     .crossfade(true)
                     .build(),
                 contentDescription = book.title,

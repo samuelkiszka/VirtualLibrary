@@ -74,16 +74,27 @@ fun VirtualLibraryNavGraph(
         ) {
             val viewModel: CollectionDetailViewModel = viewModel(factory = CollectionDetailViewModel.Factory)
             CollectionDetailScreen(
-                navController = navController
+                navController = navController,
+                viewModel = viewModel
+            )
+        }
+        composable(
+            route = AddEditCollectionDestination.route
+        ) {
+            val viewModel: AddEditCollectionViewModel = viewModel(factory = AddEditCollectionViewModel.Factory)
+            AddEditCollectionScreen(
+                navController = navController,
+                viewModel = viewModel
             )
         }
         composable(
             route = AddEditCollectionDestination.routeWithArgs,
             arguments = listOf(navArgument(AddEditCollectionDestination.ARGS) {
-                type = NavType.LongType
+                type = NavType.StringType
             })
         ) {
             val viewModel: AddEditCollectionViewModel = viewModel(factory = AddEditCollectionViewModel.Factory)
+            viewModel.populateData()
             AddEditCollectionScreen(
                 navController = navController,
                 viewModel = viewModel
