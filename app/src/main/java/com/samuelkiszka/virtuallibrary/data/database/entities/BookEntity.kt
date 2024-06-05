@@ -5,6 +5,8 @@ import androidx.room.PrimaryKey
 import androidx.room.TypeConverter
 import com.samuelkiszka.virtuallibrary.ui.screens.library.LibraryDetailUiState
 import org.jetbrains.annotations.NotNull
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 @Entity(tableName = "books")
 data class BookEntity(
@@ -28,6 +30,21 @@ data class BookEntity(
             book = this,
             changed = changed
         )
+    }
+
+    fun getJsonUrlEncoded(): String {
+        val data = """
+            {
+                "id":$id,
+                "title":"$title",
+                "author":"$author",
+                "yearPublished":"$yearPublished",
+                "numberOfPages":$numberOfPages,
+                "notes":"$notes",
+                "coverUrl":"$coverUrl"
+            }
+        """
+        return URLEncoder.encode(data, StandardCharsets.UTF_8.toString())
     }
 }
 

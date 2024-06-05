@@ -75,6 +75,7 @@ import com.samuelkiszka.virtuallibrary.data.database.entities.BookEntity
 import com.samuelkiszka.virtuallibrary.ui.common.DefaultAlertDialog
 import com.samuelkiszka.virtuallibrary.ui.common.VirtualLibraryTopBar
 import com.samuelkiszka.virtuallibrary.ui.navigation.NavigationDestination
+import com.samuelkiszka.virtuallibrary.ui.screens.search.AddEditBookDestination
 import com.samuelkiszka.virtuallibrary.ui.theme.VirtualLibraryTheme
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
@@ -114,7 +115,8 @@ fun LibraryDetailScreen(
                                 )
                             },
                             onClick = {
-
+                                viewModel.toggleDropdownMenu()
+                                navController.navigate("${AddEditBookDestination.route}/${viewModel.uiState.book.getJsonUrlEncoded()}")
                             }
                         )
                         DropdownMenuItem(

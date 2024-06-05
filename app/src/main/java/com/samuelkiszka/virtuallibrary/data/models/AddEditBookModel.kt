@@ -1,5 +1,6 @@
 package com.samuelkiszka.virtuallibrary.data.models
 
+import android.util.Log
 import com.google.gson.Gson
 import com.samuelkiszka.virtuallibrary.data.database.entities.BookEntity
 import java.net.URLDecoder
@@ -21,10 +22,11 @@ data class AddEditBookModel(
 
     fun toBookEntity(): BookEntity {
         return BookEntity(
+            id = id.toLong(),
             title = title,
             author = author,
             yearPublished = yearPublished,
-            numberOfPages = numberOfPages.toInt(),
+            numberOfPages = if (numberOfPages != "") numberOfPages.toInt() else 0,
             notes = notes,
             coverUrl = coverUrl
         )

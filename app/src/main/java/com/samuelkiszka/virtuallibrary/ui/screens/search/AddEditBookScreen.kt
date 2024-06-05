@@ -63,6 +63,8 @@ fun AddEditBookScreen(
                 onSave = {
                     coroutineScope.launch {
                         val id = viewModel.saveBook()
+                        navController.popBackStack()
+                        navController.popBackStack()
                         navController.navigate("${LibraryDetailDestination.route}/$id")
                     }
                 }
@@ -110,7 +112,7 @@ fun Header(
     ) {
         AsyncImage(
             model = ImageRequest.Builder(context = LocalContext.current)
-                .data(viewModel.addEditUiState.book.coverUrl)
+                .data(viewModel.coverUrl)
                 .crossfade(true)
                 .build(),
             contentDescription = "",
@@ -178,21 +180,10 @@ fun ValueEditingFields(
             label = { Text("Number of pages") },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Number,
-                imeAction = ImeAction.Next
-            ),
-            modifier = Modifier
-                .fillMaxWidth()
-        )
-        OutlinedTextField(
-            value = viewModel.notes,
-            onValueChange = { viewModel.updateNotes(it) },
-            label = { Text("Notes") },
-            keyboardOptions = KeyboardOptions(
                 imeAction = ImeAction.Done
             ),
             modifier = Modifier
                 .fillMaxWidth()
-                .fillMaxHeight()
         )
     }
 }

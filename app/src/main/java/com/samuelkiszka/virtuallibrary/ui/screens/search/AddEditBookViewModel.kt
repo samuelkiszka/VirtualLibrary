@@ -2,6 +2,8 @@ package com.samuelkiszka.virtuallibrary.ui.screens.search
 
 import android.util.Log
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
@@ -29,6 +31,9 @@ class AddEditBookViewModel(
 
     var args: String? = savedStateHandle[AddEditBookDestination.ARGS]
 
+    var id by mutableIntStateOf(0)
+        private set
+
     var title by mutableStateOf("")
         private set
 
@@ -41,8 +46,12 @@ class AddEditBookViewModel(
     var numberOfPages by mutableStateOf("")
         private set
 
-    var notes by mutableStateOf("")
+    var coverUrl by mutableStateOf("")
         private set
+
+    fun updateId(newId: Int) {
+        id = newId
+    }
 
     fun updateTitle(newTitle: String) {
         title = newTitle
@@ -62,30 +71,37 @@ class AddEditBookViewModel(
         }
     }
 
-    fun updateNotes(newNotes: String) {
-        notes = newNotes
+    fun updateCoverUrl(newCoverUrl: String) {
+        coverUrl = newCoverUrl
     }
 
     fun populateData() {
         if (!args.isNullOrEmpty()){
             addEditUiState.book = AddEditBookModel().fromJson(args!!)
         }
+        updateId(addEditUiState.book.id)
         updateTitle(addEditUiState.book.title)
         updateAuthor(addEditUiState.book.author)
         updateYearPublished(addEditUiState.book.yearPublished)
         updateNumberOfPages(addEditUiState.book.numberOfPages)
-        updateNotes(addEditUiState.book.notes)
+        updateCoverUrl(addEditUiState.book.coverUrl)
     }
 
     suspend fun saveBook(): Long {
-        return bookRepository.saveBook(
-            AddEditBookModel(
-                title = title,
-                author = author,
-                yearPublished = yearPublished,
-                numberOfPages = numberOfPages,
-                notes = notes
-            ).toBookEntity())
+        val entity = AddEditBookModel(
+            id = id,
+            title = title,
+            author = author,
+            yearPublished = yearPublished,
+            numberOfPages = numberOfPages,
+            coverUrl = coverUrl
+        ).toBookEntity()
+        if (entity.id != 0L) {
+            bookRepository.updateBookBasicInfo(entity)
+            return entity.id
+        } else {
+            return bookRepository.saveBook(entity)
+        }
     }
 
     companion object {
