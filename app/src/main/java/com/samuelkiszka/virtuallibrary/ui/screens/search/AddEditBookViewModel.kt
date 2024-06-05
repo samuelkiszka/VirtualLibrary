@@ -1,9 +1,7 @@
 package com.samuelkiszka.virtuallibrary.ui.screens.search
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
@@ -14,8 +12,7 @@ import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.samuelkiszka.virtuallibrary.VirtualLibraryApplication
-import com.samuelkiszka.virtuallibrary.data.BookRepository
-import com.samuelkiszka.virtuallibrary.data.database.entities.BookEntity
+import com.samuelkiszka.virtuallibrary.data.AppRepository
 import com.samuelkiszka.virtuallibrary.data.models.AddEditBookModel
 
 data class AddEditUiState(
@@ -23,7 +20,7 @@ data class AddEditUiState(
 )
 
 class AddEditBookViewModel(
-    private val bookRepository: BookRepository,
+    private val appRepository: AppRepository,
     savedStateHandle: SavedStateHandle
 ): ViewModel() {
     var addEditUiState: AddEditUiState by mutableStateOf(AddEditUiState())
@@ -97,10 +94,10 @@ class AddEditBookViewModel(
             coverUrl = coverUrl
         ).toBookEntity()
         if (entity.id != 0L) {
-            bookRepository.updateBookBasicInfo(entity)
+            appRepository.updateBookBasicInfo(entity)
             return entity.id
         } else {
-            return bookRepository.saveBook(entity)
+            return appRepository.saveBook(entity)
         }
     }
 
@@ -108,9 +105,9 @@ class AddEditBookViewModel(
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 val application = (this[APPLICATION_KEY] as VirtualLibraryApplication)
-                val bookRepository = application.container.bookRepository
+                val bookRepository = application.container.appRepository
                 AddEditBookViewModel(
-                    bookRepository = bookRepository,
+                    appRepository = bookRepository,
                     this.createSavedStateHandle()
                 )
             }

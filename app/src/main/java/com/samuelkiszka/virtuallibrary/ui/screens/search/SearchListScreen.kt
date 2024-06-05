@@ -35,6 +35,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.samuelkiszka.virtuallibrary.R
 import com.samuelkiszka.virtuallibrary.data.models.BookApiModel
+import com.samuelkiszka.virtuallibrary.ui.common.AddNewEntityProposal
 import com.samuelkiszka.virtuallibrary.ui.common.VirtualLibraryBottomBar
 import com.samuelkiszka.virtuallibrary.ui.common.VirtualLibrarySearchBar
 import com.samuelkiszka.virtuallibrary.ui.common.VirtualLibraryTopBar
@@ -108,7 +109,8 @@ fun SearchListBody(
                 bookList = (viewModel.searchListUiState as SearchListUiState.Success).bookList,
                 onBookClicked = onBookClicked
             )
-            is SearchListUiState.Empty -> AddNewBookText(
+            is SearchListUiState.Empty -> AddNewEntityProposal(
+                proposalText = stringResource(id = R.string.add_book_text),
                 onAddButtonClicked = onAddButtonClicked
             )
         }
@@ -238,11 +240,3 @@ fun SearchBookListCard(
 
     }
 }
-
-//@Preview(showBackground = true, showSystemUi = true)
-//@Composable
-//fun SearchListScreenPreview() {
-//    VirtualLibraryTheme {
-//        SearchListScreen()
-//    }
-//}

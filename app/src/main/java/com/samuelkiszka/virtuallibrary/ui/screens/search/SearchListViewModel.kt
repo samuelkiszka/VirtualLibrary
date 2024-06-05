@@ -11,7 +11,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.samuelkiszka.virtuallibrary.VirtualLibraryApplication
-import com.samuelkiszka.virtuallibrary.data.BookRepository
+import com.samuelkiszka.virtuallibrary.data.AppRepository
 import com.samuelkiszka.virtuallibrary.data.models.BookApiModel
 import kotlinx.coroutines.launch
 
@@ -23,7 +23,7 @@ sealed interface SearchListUiState {
 }
 
 class SearchListViewModel(
-    private val bookRepository: BookRepository
+    private val appRepository: AppRepository
 ): ViewModel() {
     var searchListUiState: SearchListUiState by mutableStateOf(SearchListUiState.Empty)
         private set
@@ -46,7 +46,7 @@ class SearchListViewModel(
         viewModelScope.launch {
             searchListUiState = SearchListUiState.Loading
             searchListUiState = try {
-                SearchListUiState.Success(bookRepository.getBooksByQuery(query))
+                SearchListUiState.Success(appRepository.getBooksByQuery(query))
             } catch (e: Exception) {
                 Log.e("BookRepository", "getIsbnList: ", e)
                 SearchListUiState.Error
@@ -58,8 +58,8 @@ class SearchListViewModel(
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 val application = (this[APPLICATION_KEY] as VirtualLibraryApplication)
-                val bookRepository = application.container.bookRepository
-                SearchListViewModel(bookRepository = bookRepository)
+                val bookRepository = application.container.appRepository
+                SearchListViewModel(appRepository = bookRepository)
             }
         }
     }

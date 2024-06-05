@@ -1,8 +1,7 @@
-package com.samuelkiszka.virtuallibrary.ui.screens.search
+package com.samuelkiszka.virtuallibrary.ui.screens.collection
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -30,25 +29,24 @@ import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.samuelkiszka.virtuallibrary.R
+import com.samuelkiszka.virtuallibrary.data.models.AddEditCollectionModel
 import com.samuelkiszka.virtuallibrary.ui.common.SaveButton
 import com.samuelkiszka.virtuallibrary.ui.common.VirtualLibraryTopBar
 import com.samuelkiszka.virtuallibrary.ui.navigation.NavigationDestination
-import com.samuelkiszka.virtuallibrary.ui.screens.library.LibraryDetailDestination
 import kotlinx.coroutines.launch
-import kotlin.coroutines.coroutineContext
 
-object AddEditBookDestination : NavigationDestination {
-    override val route = "AddEditBook"
-    override val titleRes = R.string.add_edit_book_screen_name
+object AddEditCollectionDestination : NavigationDestination {
+    override val route = "AddEditCollection"
+    override val titleRes = R.string.add_edit_collection_screen_name
     const val ARGS = "data"
     val routeWithArgs = "$route/{$ARGS}"
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddEditBookScreen(
+fun AddEditCollectionScreen(
     navController: NavHostController = NavHostController(LocalContext.current),
-    viewModel: AddEditBookViewModel
+    viewModel: AddEditCollectionViewModel
 ) {
     val coroutineScope = rememberCoroutineScope()
     Scaffold(
@@ -63,16 +61,15 @@ fun AddEditBookScreen(
             SaveButton(
                 onSave = {
                     coroutineScope.launch {
-                        val id = viewModel.saveBook()
+                        val id = viewModel.saveCollection()
                         navController.popBackStack()
-                        navController.popBackStack()
-                        navController.navigate("${LibraryDetailDestination.route}/$id")
+                        navController.navigate("${CollectionDetailDestination.route}/$id")
                     }
                 }
             )
         }
     ) { innerPadding ->
-        SearchDetailBody(
+        AddEditCollectionBody(
             viewModel = viewModel,
             modifier = Modifier.padding(
                 bottom = innerPadding.calculateBottomPadding(),
@@ -83,8 +80,8 @@ fun AddEditBookScreen(
 }
 
 @Composable
-fun SearchDetailBody(
-    viewModel: AddEditBookViewModel,
+fun AddEditCollectionBody(
+    viewModel: AddEditCollectionViewModel,
     modifier: Modifier = Modifier
 ) {
     val scrollState = rememberScrollState()
@@ -94,9 +91,6 @@ fun SearchDetailBody(
             .fillMaxSize()
             .verticalScroll(scrollState)
     ) {
-        Header(
-            viewModel
-        )
         ValueEditingFields(
             viewModel
         )
@@ -104,42 +98,8 @@ fun SearchDetailBody(
 }
 
 @Composable
-fun Header(
-    viewModel: AddEditBookViewModel,
-    modifier: Modifier = Modifier
-) {
-    Row(
-        modifier = modifier
-    ) {
-        AsyncImage(
-            model = ImageRequest.Builder(context = LocalContext.current)
-                .data(viewModel.coverUrl)
-                .crossfade(true)
-                .build(),
-            contentDescription = "",
-            contentScale = ContentScale.FillWidth,
-            error = painterResource(id = R.drawable.demo_book_cover),
-            placeholder = painterResource(id = R.drawable.demo_book_cover),
-            modifier = Modifier
-                .padding(end = dimensionResource(id = R.dimen.padding_around))
-                .width(150.dp)
-        )
-        Column(
-            modifier = Modifier
-        ) {
-            Text(
-                text = viewModel.title,
-            )
-            Text(
-                text = viewModel.author,
-            )
-        }
-    }
-}
-
-@Composable
 fun ValueEditingFields(
-    viewModel: AddEditBookViewModel,
+    viewModel: AddEditCollectionViewModel,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -156,32 +116,11 @@ fun ValueEditingFields(
                 .fillMaxWidth()
         )
         OutlinedTextField(
-            value = viewModel.author,
-            onValueChange = { viewModel.updateAuthor(it) },
+            value = viewModel.description,
+            onValueChange = { viewModel.updateDescription(it) },
             label = { Text("Author") },
             keyboardOptions = KeyboardOptions(
                 imeAction = ImeAction.Next
-            ),
-            modifier = Modifier
-                .fillMaxWidth()
-        )
-        OutlinedTextField(
-            value = viewModel.yearPublished,
-            onValueChange = { viewModel.updateYearPublished(it) },
-            label = { Text("Year published") },
-            keyboardOptions = KeyboardOptions(
-                imeAction = ImeAction.Next
-            ),
-            modifier = Modifier
-                .fillMaxWidth()
-        )
-        OutlinedTextField(
-            value = viewModel.numberOfPages,
-            onValueChange = { viewModel.updateNumberOfPages(it) },
-            label = { Text("Number of pages") },
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Number,
-                imeAction = ImeAction.Done
             ),
             modifier = Modifier
                 .fillMaxWidth()

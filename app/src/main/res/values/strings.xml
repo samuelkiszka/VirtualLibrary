@@ -7,10 +7,12 @@
     <string name="collection_detail_screen_name">Collection Detail</string>
     <string name="search_list_screen_name">Search</string>
     <string name="add_edit_book_screen_name">Add new book</string>
+    <string name="add_edit_collection_screen_name">Add new collection</string>
 
     <string name="back_button">Back</string>
     <string name="option_button">Option button</string>
     <string name="add_book_button">Add Book</string>
+    <string name="add_item_button">Add Entity Button</string>
     <string name="edit_button">Edit Button</string>
     <string name="date_picker">Date Picker</string>
 
@@ -22,4 +24,5 @@
     <string name="loading">Loading...</string>
     <string name="book_delete_title">Delete book</string>
     <string name="book_delete_text">Do you really want to delete book %1$s?</string>
+    <string name="add_collection_text">You don\'t have any collections yet. Add one!</string>
 </resources>

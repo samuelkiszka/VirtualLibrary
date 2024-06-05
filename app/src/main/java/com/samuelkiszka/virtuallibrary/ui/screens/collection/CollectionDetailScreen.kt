@@ -18,6 +18,8 @@ import com.samuelkiszka.virtuallibrary.ui.theme.VirtualLibraryTheme
 object CollectionDetailDestination : NavigationDestination {
     override val route = "CollectionDetail"
     override val titleRes = R.string.collection_detail_screen_name
+    const val ARGS = "id"
+    val routeWithArgs = "${CollectionDetailDestination.route}/{$ARGS}"
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

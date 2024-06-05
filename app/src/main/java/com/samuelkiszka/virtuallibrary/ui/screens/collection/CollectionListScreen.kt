@@ -2,6 +2,7 @@ package com.samuelkiszka.virtuallibrary.ui.screens.collection
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -13,17 +14,21 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.samuelkiszka.virtuallibrary.R
+import com.samuelkiszka.virtuallibrary.data.mocks.CollectionListModelMock
 import com.samuelkiszka.virtuallibrary.data.models.BookCollectionListModel
 import com.samuelkiszka.virtuallibrary.data.models.CollectionListModel
+import com.samuelkiszka.virtuallibrary.ui.common.AddNewEntityProposal
 import com.samuelkiszka.virtuallibrary.ui.common.VirtualLibraryBottomBar
 import com.samuelkiszka.virtuallibrary.ui.common.VirtualLibrarySearchBar
 import com.samuelkiszka.virtuallibrary.ui.common.VirtualLibraryTopBar
@@ -39,7 +44,8 @@ object CollectionListDestination : NavigationDestination {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CollectionListScreen(
-    navController: NavHostController = NavHostController(LocalContext.current)
+    navController: NavHostController = NavHostController(LocalContext.current),
+    viewModel: CollectionListViewModel
 ) {
     Scaffold(
         topBar = {
@@ -55,11 +61,15 @@ fun CollectionListScreen(
         }
     ) { innerPadding ->
         CollectionListBody(
+            collections = viewModel.uiState.collectionList,
             onBookClicked = {
-                navController.navigate(LibraryDetailDestination.route)
+
             },
             onCollectionClicked = {
                 navController.navigate(CollectionDetailDestination.route)
+            },
+            onNewCollectionClicked = {
+                navController.navigate("${AddEditCollectionDestination.route}/$it")
             },
             modifier = Modifier.padding(
                 bottom = innerPadding.calculateBottomPadding(),
@@ -71,16 +81,24 @@ fun CollectionListScreen(
 
 @Composable
 fun CollectionListBody(
-    modifier: Modifier = Modifier,
+    collections: List<CollectionListModel>,
     onBookClicked: (Int) -> Unit,
-    onCollectionClicked: (Int) -> Unit
+    onCollectionClicked: (Int) -> Unit,
+    onNewCollectionClicked: (Int) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     Column (
         modifier = modifier.fillMaxSize()
     ) {
         VirtualLibrarySearchBar {}
+        if (collections.isEmpty()) {
+            AddNewEntityProposal(
+                onAddButtonClicked = { onNewCollectionClicked(-1) },
+                proposalText = stringResource(R.string.add_collection_text)
+            )
+        }
         CollectionList(
-            collections = CollectionListViewModel().getCollectionList(),
+            collections = collections,
             onBookClicked = onBookClicked,
             onCollectionClicked = onCollectionClicked
         )
@@ -164,12 +182,4 @@ fun BookCard(
                 onBookClicked(book.id)
             }
     )
-}
-
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun CollectionListScreenPreview() {
-    VirtualLibraryTheme {
-        CollectionListScreen()
-    }
 }

@@ -3,14 +3,18 @@ package com.samuelkiszka.virtuallibrary.ui.common
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.rounded.AddCircle
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -25,10 +29,12 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.samuelkiszka.virtuallibrary.R
@@ -223,5 +229,55 @@ fun DefaultAlertDialog(
                 }
             }
         )
+    }
+}
+
+@Composable
+fun AddNewEntityProposal(
+    onAddButtonClicked: () -> Unit,
+    proposalText: String,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+        modifier = modifier
+            .fillMaxSize()
+    ) {
+        Text(
+            text = proposalText,
+            style = MaterialTheme.typography.bodyLarge,
+            textAlign = TextAlign.Center,
+            modifier = Modifier
+                .padding(
+                    horizontal = dimensionResource(id = R.dimen.padding_medium)
+                ),
+            )
+        IconButton(
+            onClick = {
+                onAddButtonClicked()
+            }
+        ) {
+            Icon(
+                imageVector = Icons.Rounded.AddCircle,
+                contentDescription = stringResource(R.string.add_item_button),
+                modifier = Modifier
+                    .size(150.dp)
+            )
+        }
+    }
+}
+
+@Composable
+fun SaveButton(
+    onSave: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Button(
+        onClick = { onSave() },
+        modifier = modifier
+            .fillMaxWidth()
+    ) {
+        Text(stringResource(R.string.save_button_text))
     }
 }

@@ -8,7 +8,7 @@ import okhttp3.MediaType.Companion.toMediaType
 import retrofit2.Retrofit
 
 interface AppContainer {
-    val bookRepository: BookRepository
+    val appRepository: AppRepository
 }
 
 class DefaultAppContainer(
@@ -28,8 +28,8 @@ class DefaultAppContainer(
         retrofit.create(BookApiService::class.java)
     }
 
-    override val bookRepository: BookRepository by lazy {
-        DefaultBookRepository(
+    override val appRepository: AppRepository by lazy {
+        DefaultAppRepository(
             retrofitService,
             VirtualLibraryDatabase.getDatabase(context).bookDao(),
             VirtualLibraryDatabase.getDatabase(context).collectionDao()

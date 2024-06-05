@@ -15,7 +15,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.samuelkiszka.virtuallibrary.VirtualLibraryApplication
-import com.samuelkiszka.virtuallibrary.data.BookRepository
+import com.samuelkiszka.virtuallibrary.data.AppRepository
 import com.samuelkiszka.virtuallibrary.data.database.entities.BookEntity
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
@@ -29,7 +29,7 @@ data class LibraryDetailUiState(
 
 @OptIn(ExperimentalMaterial3Api::class)
 class LibraryDetailViewModel(
-    val bookRepository: BookRepository,
+    val appRepository: AppRepository,
     savedStateHandle: SavedStateHandle
 ): ViewModel() {
     private val id: Long = checkNotNull(savedStateHandle[LibraryDetailDestination.ARGS])
@@ -70,7 +70,7 @@ class LibraryDetailViewModel(
 
     init {
         viewModelScope.launch {
-            uiState = bookRepository.getBookByIdStream(id)
+            uiState = appRepository.getBookByIdStream(id)
                 .filterNotNull()
                 .first()
                 .toLibraryDetailUiState(changed = false)
@@ -176,7 +176,7 @@ class LibraryDetailViewModel(
 
     suspend fun saveChanges() {
         if (uiState.changed) {
-            bookRepository.updateBook(
+            appRepository.updateBook(
                 uiState.book
             )
             uiState = uiState.copy(changed = false)
@@ -185,7 +185,7 @@ class LibraryDetailViewModel(
 
      fun deleteBook() {
         viewModelScope.launch {
-            bookRepository.deleteBook(uiState.book)
+            appRepository.deleteBook(uiState.book)
         }
     }
 
@@ -193,9 +193,9 @@ class LibraryDetailViewModel(
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 val application = (this[APPLICATION_KEY] as VirtualLibraryApplication)
-                val bookRepository = application.container.bookRepository
+                val bookRepository = application.container.appRepository
                 LibraryDetailViewModel(
-                    bookRepository = bookRepository,
+                    appRepository = bookRepository,
                     this.createSavedStateHandle()
                 )
             }

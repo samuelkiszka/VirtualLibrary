@@ -8,10 +8,15 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.samuelkiszka.virtuallibrary.ui.screens.collection.AddEditCollectionDestination
+import com.samuelkiszka.virtuallibrary.ui.screens.collection.AddEditCollectionScreen
+import com.samuelkiszka.virtuallibrary.ui.screens.collection.AddEditCollectionViewModel
 import com.samuelkiszka.virtuallibrary.ui.screens.collection.CollectionDetailDestination
 import com.samuelkiszka.virtuallibrary.ui.screens.collection.CollectionDetailScreen
+import com.samuelkiszka.virtuallibrary.ui.screens.collection.CollectionDetailViewModel
 import com.samuelkiszka.virtuallibrary.ui.screens.collection.CollectionListDestination
 import com.samuelkiszka.virtuallibrary.ui.screens.collection.CollectionListScreen
+import com.samuelkiszka.virtuallibrary.ui.screens.collection.CollectionListViewModel
 import com.samuelkiszka.virtuallibrary.ui.screens.library.LibraryDetailDestination
 import com.samuelkiszka.virtuallibrary.ui.screens.library.LibraryDetailScreen
 import com.samuelkiszka.virtuallibrary.ui.screens.library.LibraryDetailViewModel
@@ -55,15 +60,33 @@ fun VirtualLibraryNavGraph(
         composable(
             route = CollectionListDestination.route
         ) {
+            val viewModel: CollectionListViewModel = viewModel(factory = CollectionListViewModel.Factory)
             CollectionListScreen(
+                navController = navController,
+                viewModel = viewModel
+            )
+        }
+        composable(
+            route = CollectionDetailDestination.routeWithArgs,
+            arguments = listOf(navArgument(CollectionDetailDestination.ARGS) {
+                type = NavType.LongType
+            })
+        ) {
+            val viewModel: CollectionDetailViewModel = viewModel(factory = CollectionDetailViewModel.Factory)
+            CollectionDetailScreen(
                 navController = navController
             )
         }
         composable(
-            route = CollectionDetailDestination.route
+            route = AddEditCollectionDestination.routeWithArgs,
+            arguments = listOf(navArgument(AddEditCollectionDestination.ARGS) {
+                type = NavType.LongType
+            })
         ) {
-            CollectionDetailScreen(
-                navController = navController
+            val viewModel: AddEditCollectionViewModel = viewModel(factory = AddEditCollectionViewModel.Factory)
+            AddEditCollectionScreen(
+                navController = navController,
+                viewModel = viewModel
             )
         }
         composable(
