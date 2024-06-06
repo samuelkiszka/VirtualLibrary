@@ -1,16 +1,10 @@
 package com.samuelkiszka.virtuallibrary.ui.screens.collection
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -22,30 +16,25 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.samuelkiszka.virtuallibrary.R
-import com.samuelkiszka.virtuallibrary.data.mocks.CollectionListModelMock
 import com.samuelkiszka.virtuallibrary.data.models.BookCollectionListModel
 import com.samuelkiszka.virtuallibrary.data.models.CollectionListModel
 import com.samuelkiszka.virtuallibrary.ui.common.AddNewEntityProposal
-import com.samuelkiszka.virtuallibrary.ui.common.Divider
 import com.samuelkiszka.virtuallibrary.ui.common.VirtualLibraryBottomBar
 import com.samuelkiszka.virtuallibrary.ui.common.VirtualLibrarySearchBar
 import com.samuelkiszka.virtuallibrary.ui.common.VirtualLibraryTopBar
 import com.samuelkiszka.virtuallibrary.ui.navigation.NavigationDestination
 import com.samuelkiszka.virtuallibrary.ui.screens.library.LibraryDetailDestination
-import com.samuelkiszka.virtuallibrary.ui.theme.VirtualLibraryTheme
 
 object CollectionListDestination : NavigationDestination {
     override val route = "CollectionList"
@@ -108,6 +97,9 @@ fun CollectionListScreen(
                     AddEditCollectionDestination.route
                 )
             },
+            searchQuery = viewModel.searchQuery,
+            updateQuery = viewModel::updateSearchQuery,
+            collectionSatisfiesQuery = viewModel::collectionSatisfiesQuery,
             modifier = Modifier.padding(
                 bottom = innerPadding.calculateBottomPadding(),
                 top = dimensionResource(id = R.dimen.top_bar_size)
@@ -122,12 +114,19 @@ fun CollectionListBody(
     onBookClicked: (Long) -> Unit,
     onCollectionClicked: (Long) -> Unit,
     onNewCollectionClicked: (Int) -> Unit,
+    searchQuery: String,
+    updateQuery: (String) -> Unit,
+    collectionSatisfiesQuery: (String) -> Boolean,
     modifier: Modifier = Modifier,
 ) {
     Column (
         modifier = modifier.fillMaxSize()
     ) {
-        VirtualLibrarySearchBar {}
+        VirtualLibrarySearchBar(
+            hintText = stringResource(id = R.string.collection_list_search_hint),
+            query = searchQuery,
+            onQueryChange = { updateQuery(it) }
+        )
         if (collections.isEmpty()) {
             AddNewEntityProposal(
                 onAddButtonClicked = { onNewCollectionClicked(-1) },
@@ -137,7 +136,8 @@ fun CollectionListBody(
         CollectionList(
             collections = collections,
             onBookClicked = onBookClicked,
-            onCollectionClicked = onCollectionClicked
+            onCollectionClicked = onCollectionClicked,
+            collectionSatisfiesQuery = collectionSatisfiesQuery
         )
     }
 }
@@ -147,6 +147,7 @@ fun CollectionList(
     collections: List<CollectionListModel>,
     onBookClicked: (Long) -> Unit,
     onCollectionClicked: (Long) -> Unit,
+    collectionSatisfiesQuery: (String) -> Boolean,
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(
@@ -154,11 +155,13 @@ fun CollectionList(
             .padding(horizontal = dimensionResource(id = R.dimen.padding_around))
     ) {
         items(collections) {
-            CollectionCard(
-                it,
-                onBookClicked = onBookClicked,
-                onCollectionClicked = onCollectionClicked
-            )
+            if (collectionSatisfiesQuery(it.name)) {
+                CollectionCard(
+                    it,
+                    onBookClicked = onBookClicked,
+                    onCollectionClicked = onCollectionClicked
+                )
+            }
         }
     }
 }

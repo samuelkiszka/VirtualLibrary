@@ -37,9 +37,10 @@ interface BookDao {
     @Query("""
         SELECT id, title, author, coverUrl
         FROM books
+        WHERE title LIKE '%' || :query || '%' OR author LIKE '%' || :query || '%'
         ORDER BY title ASC
     """)
-    fun getBookList(): Flow<List<BookListModel>>
+    fun getBookList(query: String): Flow<List<BookListModel>>
 
     @Query("""
         SELECT * 

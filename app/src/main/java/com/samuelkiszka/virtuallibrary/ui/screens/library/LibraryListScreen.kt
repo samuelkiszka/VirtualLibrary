@@ -1,34 +1,23 @@
 package com.samuelkiszka.virtuallibrary.ui.screens.library
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import coil.compose.AsyncImage
-import coil.request.ImageRequest
 import com.samuelkiszka.virtuallibrary.R
 import com.samuelkiszka.virtuallibrary.data.models.BookListModel
 import com.samuelkiszka.virtuallibrary.ui.common.BookListCard
@@ -68,6 +57,9 @@ fun LibraryListScreen(
             onItemClicked = {
                 navController.navigate("${LibraryDetailDestination.route}/$it")
             },
+            searchQuery = viewModel.searchQuery,
+            updateSearchQuery = viewModel::updateSearchQuery,
+            bookSatisfiesQuery = viewModel::bookSatisfiesQuery,
             modifier = Modifier.padding(
                 bottom = innerPadding.calculateBottomPadding(),
                 top = dimensionResource(id = R.dimen.top_bar_size)
@@ -80,6 +72,9 @@ fun LibraryListScreen(
 fun LibraryListBody(
     books: List<BookListModel>,
     onItemClicked: (Long) -> Unit,
+    searchQuery: String,
+    updateSearchQuery: (String) -> Unit,
+    bookSatisfiesQuery: (BookListModel) -> Boolean,
     modifier: Modifier = Modifier
 ) {
     Column (
@@ -87,10 +82,15 @@ fun LibraryListBody(
         modifier = modifier
             .fillMaxSize()
     ) {
-        VirtualLibrarySearchBar {}
+        VirtualLibrarySearchBar(
+            hintText = stringResource(id = R.string.library_list_search_hint),
+            query = searchQuery,
+            onQueryChange = { updateSearchQuery(it) },
+        )
         BookList(
             books = books,
             onItemClicked = onItemClicked,
+            bookSatisfiesQuery = bookSatisfiesQuery,
             modifier = Modifier
         )
     }
@@ -100,6 +100,7 @@ fun LibraryListBody(
 fun BookList(
     books: List<BookListModel>,
     onItemClicked: (Long) -> Unit,
+    bookSatisfiesQuery: (BookListModel) -> Boolean,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
@@ -109,13 +110,15 @@ fun BookList(
             )
     ) {
         items(books) {
-            BookListCard(
-                book = it,
-                modifier = Modifier
-                    .clickable {
-                        onItemClicked(it.id)
-                    }
-            )
+            if (bookSatisfiesQuery(it)) {
+                BookListCard(
+                    book = it,
+                    modifier = Modifier
+                        .clickable {
+                            onItemClicked(it.id)
+                        }
+                )
+            }
         }
     }
 }

@@ -48,27 +48,21 @@ class CollectionListViewModel(
     var dropdownMenuExpanded by mutableStateOf(false)
         private set
 
+    var searchQuery by mutableStateOf("")
+        private set
+
     fun toggleDropdownMenu() {
         dropdownMenuExpanded = !dropdownMenuExpanded
 
     }
 
-//    init {
-//        getCollectionList()
-//    }
+    fun updateSearchQuery(query: String) {
+        searchQuery = query
+    }
 
-//    fun getCollectionList() {
-//        viewModelScope.launch {
-//            uiState = appRepository.getCollectionListStream()
-//                .filterNotNull()
-//                .first()
-//                .let {
-//                    CollectionListUiState(
-//                        collectionList = it
-//                    )
-//                }
-//        }
-//    }
+    fun collectionSatisfiesQuery(name: String): Boolean {
+        return name.contains(searchQuery, ignoreCase = true)
+    }
 
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {

@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">Virtual Library</string>
 
+    <string name="library_list_search_hint">Book title or author name..</string>
+    <string name="collection_list_search_hint">Collection name..</string>
+
     <string name="library_list_screen_name">Library</string>
     <string name="library_detail_screen_name">Book Detail</string>
     <string name="collection_list_screen_name">Collections</string>

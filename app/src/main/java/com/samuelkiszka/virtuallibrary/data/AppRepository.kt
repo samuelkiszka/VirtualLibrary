@@ -22,7 +22,7 @@ interface AppRepository {
     suspend fun updateBookBasicInfo(book: BookEntity): Long
     suspend fun deleteBook(book: BookEntity)
     fun getBookByIdStream(id: Long): Flow<BookEntity?>
-    fun getBookListStream(): Flow<List<BookListModel>>
+    fun getBookListStream(query: String = ""): Flow<List<BookListModel>>
     fun getBooksNotInCollection(collectionId: Long): Flow<List<AddListItemModel>>
     fun getBooksInCollection(collectionId: Long): Flow<List<BookListModel>>
     fun getBookCollections(bookId: Long): Flow<List<AddListItemModel>>
@@ -101,8 +101,8 @@ class DefaultAppRepository(
         return bookDao.getBookById(id)
     }
 
-    override fun getBookListStream(): Flow<List<BookListModel>> {
-        return bookDao.getBookList()
+    override fun getBookListStream(query: String): Flow<List<BookListModel>> {
+        return bookDao.getBookList(query)
     }
 
     override fun getBooksNotInCollection(collectionId: Long): Flow<List<AddListItemModel>> {

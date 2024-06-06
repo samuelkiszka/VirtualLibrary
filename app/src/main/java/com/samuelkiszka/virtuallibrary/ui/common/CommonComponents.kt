@@ -57,16 +57,19 @@ import com.samuelkiszka.virtuallibrary.ui.screens.search.SearchListDestination
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun VirtualLibrarySearchBar(
+    hintText: String = "",
     query: String = "",
     onSearch: (String) -> Unit = {},
-    onQueryChange: (String) -> Unit = {},
+    onQueryChange: (String) -> Unit
 ) {
     SearchBar(
         query = query,
         onQueryChange = onQueryChange,
         onSearch = onSearch,
         placeholder = {
-            Text("Search for books...")
+            Text(
+                text = hintText,
+            )
         },
         leadingIcon = {
             Icon(
