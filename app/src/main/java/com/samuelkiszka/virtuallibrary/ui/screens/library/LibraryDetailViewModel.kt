@@ -17,8 +17,14 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.samuelkiszka.virtuallibrary.VirtualLibraryApplication
 import com.samuelkiszka.virtuallibrary.data.AppRepository
 import com.samuelkiszka.virtuallibrary.data.database.entities.BookEntity
+import com.samuelkiszka.virtuallibrary.data.models.AddListItemModel
+import com.samuelkiszka.virtuallibrary.data.models.BookListModel
+import com.samuelkiszka.virtuallibrary.ui.screens.collection.CollectionDetailViewModel
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.util.Locale
 
@@ -37,11 +43,53 @@ class LibraryDetailViewModel(
     var uiState by mutableStateOf(LibraryDetailUiState())
         private set
 
+    var bookCollections: StateFlow<List<AddListItemModel>> =
+        appRepository.getBookCollections(id)
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
+                initialValue = listOf()
+            )
+
+    var otherCollections: StateFlow<List<AddListItemModel>> =
+        appRepository.getBookMissingCollections(id)
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
+                initialValue = listOf()
+            )
+
     var dropdownMenuExpanded by mutableStateOf(false)
         private set
 
     var showDeleteAlert by mutableStateOf(false)
         private set
+
+    var showManageCollectionsDialog by mutableStateOf(false)
+        private set
+
+    var addCollectionOption by mutableStateOf(true)
+        private set
+
+    fun showCollectionsToAdd(addCollectionOption: Boolean) {
+        this.addCollectionOption = addCollectionOption
+    }
+
+    fun toggleManageCollectionsDialog() {
+        showManageCollectionsDialog = !showManageCollectionsDialog
+    }
+
+    fun addBookToCollection(collectionId: Long) {
+        viewModelScope.launch {
+            appRepository.addBookToCollection(collectionId, id)
+        }
+    }
+
+    fun removeBookFromCollection(collectionId: Long) {
+        viewModelScope.launch {
+            appRepository.removeBookFromCollection(collectionId, id)
+        }
+    }
 
     @OptIn(ExperimentalMaterial3Api::class)
     var startDate by mutableStateOf(DatePickerState(locale = Locale("English")))
@@ -200,5 +248,6 @@ class LibraryDetailViewModel(
                 )
             }
         }
+        private const val TIMEOUT_MILLIS = 5_000L
     }
 }

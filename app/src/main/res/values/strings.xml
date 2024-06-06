@@ -12,6 +12,8 @@
     <string name="back_button">Back</string>
     <string name="option_button">Option button</string>
     <string name="add_book_button">Add Book</string>
+    <string name="edit_book_button">Edit Book</string>
+    <string name="remove_book_button">Delete book</string>
     <string name="add_item_button">Add Entity Button</string>
     <string name="edit_button">Edit Button</string>
     <string name="date_picker">Date Picker</string>
@@ -32,4 +34,11 @@
     <string name="add_book_to_collection_text">You don\'t have any books in this collection. Add some!</string>
     <string name="add_books_to_collection_no_more_books_text">You have added all available books to this collection. Find more books to read!</string>
     <string name="remove_books_from_collection_no_books_in_collection">There are no books in this collection.</string>
+    <string name="add_collections_to_book_no_more_collections">You don\'t have any more collections. \nMaybe create some new ones?</string>
+    <string name="remove_collections_from_book_no_more_collections">This book is not in any collection. \nAdd it to a collection?</string>
+
+    <string name="add_collections_membership">Add \ncollections</string>
+    <string name="remove_collections_membership">Remove collections</string>
+    <string name="add_books_membership">Add books</string>
+    <string name="remove_books_membership">Remove books</string>
 </resources>

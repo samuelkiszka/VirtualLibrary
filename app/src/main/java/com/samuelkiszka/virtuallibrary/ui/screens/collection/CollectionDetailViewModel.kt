@@ -56,7 +56,7 @@ class CollectionDetailViewModel(
     var dropdownMenuExpanded by mutableStateOf(false)
         private set
 
-    var showAddBookDialog by mutableStateOf(false)
+    var showManageBooksDialog by mutableStateOf(false)
         private set
 
     var addBooksOption by mutableStateOf(true)
@@ -74,7 +74,7 @@ class CollectionDetailViewModel(
     }
 
     fun toggleAddBookDialog() {
-        showAddBookDialog = !showAddBookDialog
+        showManageBooksDialog = !showManageBooksDialog
     }
 
     fun showItemsToAdd(addBooksOption: Boolean) {

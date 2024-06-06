@@ -6,7 +6,9 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.samuelkiszka.virtuallibrary.data.database.entities.BookEntity
 import com.samuelkiszka.virtuallibrary.data.database.entities.CollectionEntity
+import com.samuelkiszka.virtuallibrary.data.models.AddListItemModel
 import com.samuelkiszka.virtuallibrary.data.models.BookCollectionListModel
+import com.samuelkiszka.virtuallibrary.data.models.BookListModel
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -59,4 +61,33 @@ interface CollectionDao {
         WHERE collectionId = :collectionId AND bookId = :bookId
     """)
     suspend fun removeBookFromCollection(collectionId: Long, bookId: Long)
+
+    @Query("""
+        DELETE FROM collection_books
+        WHERE collectionId = :collectionId
+    """)
+    suspend fun removeAllBooksFromCollection(collectionId: Long)
+
+    @Query("""
+        SELECT id, name as title
+        FROM collections
+        WHERE id NOT IN (
+            SELECT collectionId
+            FROM collection_books
+            WHERE bookId = :bookId
+        )
+        ORDER BY title ASC
+    """)
+    fun getBookMissingCollections(bookId: Long): Flow<List<AddListItemModel>>
+
+    @Query("""
+        SELECT id, name as title
+        FROM collections
+        WHERE id IN (
+            SELECT collectionId
+            FROM collection_books
+            WHERE bookId = :bookId
+        )
+    """)
+    fun getBookCollections(bookId: Long): Flow<List<AddListItemModel>>
 }

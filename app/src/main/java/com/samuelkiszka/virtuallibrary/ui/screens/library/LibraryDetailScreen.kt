@@ -12,8 +12,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
@@ -24,7 +22,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DatePicker
@@ -35,21 +32,15 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -59,7 +50,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -72,12 +62,15 @@ import com.gowtham.ratingbar.RatingBar
 import com.gowtham.ratingbar.RatingBarStyle
 import com.samuelkiszka.virtuallibrary.R
 import com.samuelkiszka.virtuallibrary.data.database.entities.BookEntity
+import com.samuelkiszka.virtuallibrary.data.models.AddListItemModel
 import com.samuelkiszka.virtuallibrary.ui.common.DefaultAlertDialog
+import com.samuelkiszka.virtuallibrary.ui.common.MembershipDialog
 import com.samuelkiszka.virtuallibrary.ui.common.VirtualLibraryTopBar
 import com.samuelkiszka.virtuallibrary.ui.navigation.NavigationDestination
+import com.samuelkiszka.virtuallibrary.ui.screens.collection.CollectionDetailDestination
+import com.samuelkiszka.virtuallibrary.ui.screens.collection.CollectionListDestination
 import com.samuelkiszka.virtuallibrary.ui.screens.search.AddEditBookDestination
 import com.samuelkiszka.virtuallibrary.ui.theme.VirtualLibraryTheme
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
 object LibraryDetailDestination : NavigationDestination {
@@ -110,7 +103,7 @@ fun LibraryDetailScreen(
                         DropdownMenuItem(
                             text = {
                                 Text(
-                                    text = "Edit",
+                                    text = stringResource(id = R.string.edit_book_button),
                                     style = MaterialTheme.typography.titleMedium
                                 )
                             },
@@ -122,7 +115,7 @@ fun LibraryDetailScreen(
                         DropdownMenuItem(
                             text = {
                                 Text(
-                                    text = "Delete",
+                                    text = stringResource(id = R.string.remove_book_button),
                                     style = MaterialTheme.typography.titleMedium
                                 )
                             },
@@ -163,6 +156,12 @@ fun LibraryDetailScreen(
         LibraryDetailBody(
             viewModel = viewModel,
             navigateUp = { navController.navigateUp() },
+            navigateToAddCollections = {
+                navController.navigate(CollectionListDestination.route)
+            },
+            navigateToCollection = {
+                navController.navigate("${CollectionDetailDestination.route}/$it")
+            },
             modifier = Modifier.padding(
                 bottom = innerPadding.calculateBottomPadding(),
                 top = innerPadding.calculateTopPadding()
@@ -176,9 +175,13 @@ fun LibraryDetailScreen(
 fun LibraryDetailBody(
     viewModel: LibraryDetailViewModel,
     navigateUp: () -> Unit = {},
+    navigateToAddCollections: () -> Unit,
+    navigateToCollection: (Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val scrollState = rememberScrollState()
+    val bookCollections = viewModel.bookCollections.collectAsState()
+    val otherCollections = viewModel.otherCollections.collectAsState()
     DefaultAlertDialog(
         showDialogue = viewModel.showDeleteAlert,
         onDismissRequest = viewModel::toggleDeleteAlert,
@@ -207,6 +210,21 @@ fun LibraryDetailBody(
             viewModel.updateEndDate(viewModel.endDate.selectedDateMillis ?: 0)
         }
     )
+    MembershipDialog(
+        showAddBookDialog = viewModel.showManageCollectionsDialog,
+        addMembersOption = viewModel.addCollectionOption,
+        showItemsToAdd = viewModel::showCollectionsToAdd,
+        toggleManageMembershipDialog = viewModel::toggleManageCollectionsDialog,
+        others = otherCollections.value,
+        members = bookCollections.value,
+        addMember = viewModel::addBookToCollection,
+        removeMember = viewModel::removeBookFromCollection,
+        addText = stringResource(id = R.string.add_collections_membership),
+        removeText = stringResource(id = R.string.remove_collections_membership),
+        noMemberToAddText = stringResource(id = R.string.add_collections_to_book_no_more_collections),
+        noMemberToRemoveText = stringResource(id = R.string.remove_collections_from_book_no_more_collections),
+        navigateToAddMembers = navigateToAddCollections
+    )
     Column(
         modifier = modifier
             .padding(dimensionResource(id = R.dimen.padding_around))
@@ -217,7 +235,15 @@ fun LibraryDetailBody(
             book = viewModel.uiState.book,
             updateRating = viewModel::updateRating
         )
-        Collections()
+        Collections(
+            collections = bookCollections.value,
+            navigateToCollection = navigateToCollection,
+            toggleManageCollectionsDialog = viewModel::toggleManageCollectionsDialog,
+            modifier = Modifier
+                .padding(
+                    vertical = dimensionResource(id = R.dimen.padding_extra_little)
+                )
+        )
         ReadingProgress(
             book = viewModel.uiState.book,
             duration = viewModel.duration,
@@ -338,7 +364,9 @@ fun Rating(
 
 @Composable
 fun Collections(
-    collections: List<String> = listOf("Collection 1", "Collection 2"),
+    collections: List<AddListItemModel>,
+    navigateToCollection: (Long)->Unit,
+    toggleManageCollectionsDialog: ()->Unit,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -359,6 +387,10 @@ fun Collections(
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier
                     .fillMaxWidth()
+                    .weight(1f)
+                    .padding(
+                        horizontal = dimensionResource(id = R.dimen.padding_little)
+                    )
             )
         }
         else {
@@ -369,7 +401,7 @@ fun Collections(
             ) {
                 items(collections) {
                     Button(
-                        onClick = { /*TODO*/ },
+                        onClick = { navigateToCollection(it.id) },
                         colors = ButtonDefaults.buttonColors(
                             containerColor = MaterialTheme.colorScheme.primaryContainer,
                             contentColor = MaterialTheme.colorScheme.onPrimaryContainer
@@ -379,7 +411,7 @@ fun Collections(
                             .padding(horizontal = dimensionResource(id = R.dimen.padding_extra_little))
                     ) {
                         Text(
-                            text = it,
+                            text = it.title,
                             style = MaterialTheme.typography.titleMedium
                         )
                     }
@@ -387,7 +419,7 @@ fun Collections(
             }
         }
         IconButton(
-            onClick = { /*TODO*/ },
+            onClick = toggleManageCollectionsDialog,
             modifier = Modifier
         ) {
             Icon(
