@@ -21,11 +21,14 @@
     <string name="save_changes_button_text">Save changes</string>
 
     <string name="add_book_text">To find a book online, \nsimply type in the title or create a new record by clicking the button below</string>
-    <string name="loading">Loading...</string>
+    <string name="loading">Loading..</string>
     <string name="book_delete_title">Delete book</string>
     <string name="book_delete_text">Do you really want to delete book %1$s?</string>
     <string name="add_collection_text">You don\'t have any collections yet. Add one!</string>
 
     <string name="collection_delete_title">Delete collection</string>
     <string name="collection_delete_text">Do you really want to delete collection %1$s?</string>
+    <string name="add_book_to_collection_text">You don\'t have any books in this collection. Add some!</string>
+    <string name="add_books_to_collection_no_more_books_text">You have added all available books to this collection. Find more books to read!</string>
+    <string name="remove_books_from_collection_no_books_in_collection">There are no books in this collection.</string>
 </resources>

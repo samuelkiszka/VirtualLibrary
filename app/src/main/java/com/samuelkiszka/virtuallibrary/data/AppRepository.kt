@@ -1,10 +1,13 @@
 package com.samuelkiszka.virtuallibrary.data
 
+import android.util.Log
 import com.samuelkiszka.virtuallibrary.data.database.daos.BookDao
 import com.samuelkiszka.virtuallibrary.data.database.daos.CollectionDao
 import com.samuelkiszka.virtuallibrary.data.database.entities.BookEntity
 import com.samuelkiszka.virtuallibrary.data.database.entities.CollectionEntity
+import com.samuelkiszka.virtuallibrary.data.models.AddListItemModel
 import com.samuelkiszka.virtuallibrary.data.models.BookApiModel
+import com.samuelkiszka.virtuallibrary.data.models.BookCollectionListModel
 import com.samuelkiszka.virtuallibrary.data.models.BookListModel
 import com.samuelkiszka.virtuallibrary.data.models.CollectionListModel
 import com.samuelkiszka.virtuallibrary.data.network.BookApiService
@@ -20,12 +23,17 @@ interface AppRepository {
     suspend fun deleteBook(book: BookEntity)
     fun getBookByIdStream(id: Long): Flow<BookEntity?>
     fun getBookListStream(): Flow<List<BookListModel>>
+    fun getBooksNotInCollection(collectionId: Long): Flow<List<AddListItemModel>>
+    fun getBooksInCollection(collectionId: Long): Flow<List<BookListModel>>
 
     suspend fun addCollection(collection: CollectionEntity): Long
     suspend fun updateCollection(collection: CollectionEntity): Long
     suspend fun deleteCollection(collection: CollectionEntity)
     fun getCollectionByIdStream(id: Long): Flow<CollectionEntity?>
     fun getCollectionListStream(): Flow<List<CollectionListModel>>
+    suspend fun getCollectionBooks(collectionId: Long): List<BookCollectionListModel>
+    suspend fun addBookToCollection(collectionId: Long, bookId: Long)
+    suspend fun removeBookFromCollection(collectionId: Long, bookId: Long)
 }
 
 class DefaultAppRepository(
@@ -95,6 +103,14 @@ class DefaultAppRepository(
         return bookDao.getBookList()
     }
 
+    override fun getBooksNotInCollection(collectionId: Long): Flow<List<AddListItemModel>> {
+        return bookDao.getBooksNotInCollection(collectionId)
+    }
+
+    override fun getBooksInCollection(collectionId: Long): Flow<List<BookListModel>> {
+        return bookDao.getBooksInCollection(collectionId)
+    }
+
     override suspend fun addCollection(collection: CollectionEntity): Long {
         return collectionDao.insertCollection(collection)
     }
@@ -122,9 +138,22 @@ class DefaultAppRepository(
                 CollectionListModel(
                     id = collection.id.toInt(),
                     name = collection.name,
-                    books = emptyList()
+                    books = getCollectionBooks(collection.id)
                 )
             }
         }
     }
+
+    override suspend fun getCollectionBooks(collectionId: Long): List<BookCollectionListModel> {
+        return collectionDao.getBooksByCollectionId(collectionId)
+    }
+
+    override suspend fun addBookToCollection(collectionId: Long, bookId: Long) {
+        collectionDao.addBookToCollection(collectionId, bookId)
+    }
+
+    override suspend fun removeBookFromCollection(collectionId: Long, bookId: Long) {
+        collectionDao.removeBookFromCollection(collectionId, bookId)
+    }
+
 }

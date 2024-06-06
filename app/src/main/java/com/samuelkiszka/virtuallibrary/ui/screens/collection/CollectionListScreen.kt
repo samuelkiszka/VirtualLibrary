@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -28,6 +29,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.samuelkiszka.virtuallibrary.R
 import com.samuelkiszka.virtuallibrary.data.mocks.CollectionListModelMock
 import com.samuelkiszka.virtuallibrary.data.models.BookCollectionListModel
@@ -198,10 +201,15 @@ fun BookCard(
     modifier: Modifier = Modifier,
     onBookClicked: (Int) -> Unit
 ) {
-    Image(
-        painterResource(id = book.image),
-        contentDescription = null,
-        contentScale = ContentScale.Crop,
+    AsyncImage(
+        model = ImageRequest.Builder(context = LocalContext.current)
+            .data(book.coverUrl)
+            .crossfade(true)
+            .build(),
+        contentDescription = "",
+        contentScale = ContentScale.FillWidth,
+        error = painterResource(id = R.drawable.demo_book_cover),
+        placeholder = painterResource(id = R.drawable.demo_book_cover),
         modifier = modifier
             .fillMaxSize()
             .padding(

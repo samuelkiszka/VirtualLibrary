@@ -13,39 +13,25 @@ public class CollectionListModelMock {
                 books = listOf<BookCollectionListModel>(
                     BookCollectionListModel(
                         id=1,
-                        image= R.drawable.demo_book_cover
+                        coverUrl= ""
                     ),
                     BookCollectionListModel(
                         id=2,
-                        image= R.drawable.demo_book_cover
+                        coverUrl= ""
                     ),
                     BookCollectionListModel(
                         id=3,
-                        image= R.drawable.demo_book_cover
+                        coverUrl= ""
                     ),
                     BookCollectionListModel(
                         id=4,
-                        image= R.drawable.demo_book_cover
+                        coverUrl= ""
                     ),
                     BookCollectionListModel(
                         id=5,
-                        image= R.drawable.demo_book_cover
+                        coverUrl= ""
                     )
                 ),
-            ),
-            CollectionListModel(
-                id=2,
-                name= "Books I have read",
-                books = listOf<BookCollectionListModel>(
-                    BookCollectionListModel(
-                        id=1,
-                        image= R.drawable.demo_book_cover
-                    ),
-                    BookCollectionListModel(
-                        id=2,
-                        image= R.drawable.demo_book_cover
-                    )
-                )
             )
         )
     }

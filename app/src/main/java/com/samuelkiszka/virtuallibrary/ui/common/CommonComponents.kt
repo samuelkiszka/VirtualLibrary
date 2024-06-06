@@ -7,8 +7,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.List
@@ -17,6 +19,7 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.rounded.AddCircle
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -32,12 +35,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.samuelkiszka.virtuallibrary.R
+import com.samuelkiszka.virtuallibrary.data.models.BookListModel
 import com.samuelkiszka.virtuallibrary.ui.screens.collection.CollectionListDestination
 import com.samuelkiszka.virtuallibrary.ui.screens.library.LibraryListDestination
 import com.samuelkiszka.virtuallibrary.ui.screens.search.SearchListDestination
@@ -90,7 +99,8 @@ fun VirtualLibraryTopBar(
         title = {
             Text(
                 text = screenTitle ?: stringResource(screenTitleId),
-                style = MaterialTheme.typography.headlineMedium
+                style = MaterialTheme.typography.headlineMedium,
+                textAlign = TextAlign.Center
             )
         },
         navigationIcon = {
@@ -279,5 +289,49 @@ fun SaveButton(
             .fillMaxWidth()
     ) {
         Text(stringResource(R.string.save_button_text))
+    }
+}
+
+@Composable
+fun BookListCard(
+    book: BookListModel,
+    modifier: Modifier = Modifier
+) {
+    Card(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(bottom = dimensionResource(id = R.dimen.padding_little))
+            .height(110.dp)
+    ){
+        Row(
+            modifier = Modifier
+                .fillMaxSize()
+        ) {
+            AsyncImage(
+                model = ImageRequest.Builder(context = LocalContext.current)
+                    .data(book.coverUrl)
+                    .crossfade(true)
+                    .build(),
+                contentDescription = book.title,
+                contentScale = ContentScale.FillBounds,
+                error = painterResource(id = R.drawable.demo_book_cover),
+                placeholder = painterResource(id = R.drawable.demo_book_cover),
+                modifier = Modifier
+                    .width(dimensionResource(id = R.dimen.list_image_width))
+            )
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(dimensionResource(id = R.dimen.padding_little))
+            ){
+                Text(
+                    text = book.title
+                )
+                Text(
+                    text = book.author
+                )
+            }
+        }
+
     }
 }

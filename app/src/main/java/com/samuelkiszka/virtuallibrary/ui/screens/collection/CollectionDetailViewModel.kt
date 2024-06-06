@@ -14,9 +14,13 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.samuelkiszka.virtuallibrary.VirtualLibraryApplication
 import com.samuelkiszka.virtuallibrary.data.AppRepository
 import com.samuelkiszka.virtuallibrary.data.database.entities.CollectionEntity
+import com.samuelkiszka.virtuallibrary.data.models.AddListItemModel
 import com.samuelkiszka.virtuallibrary.data.models.BookListModel
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 data class CollectionDetailUiState(
@@ -33,7 +37,29 @@ class CollectionDetailViewModel(
     var uiState by mutableStateOf(CollectionDetailUiState())
         private set
 
+    var booksNotInCollection: StateFlow<List<AddListItemModel>> =
+        appRepository.getBooksNotInCollection(id)
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
+                initialValue = listOf()
+            )
+
+    var booksInCollection: StateFlow<List<BookListModel>> =
+        appRepository.getBooksInCollection(id)
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
+                initialValue = listOf()
+            )
+
     var dropdownMenuExpanded by mutableStateOf(false)
+        private set
+
+    var showAddBookDialog by mutableStateOf(false)
+        private set
+
+    var addBooksOption by mutableStateOf(true)
         private set
 
     var showDeleteAlert by mutableStateOf(false)
@@ -45,6 +71,26 @@ class CollectionDetailViewModel(
 
     fun toggleDeleteAlert() {
         showDeleteAlert = !showDeleteAlert
+    }
+
+    fun toggleAddBookDialog() {
+        showAddBookDialog = !showAddBookDialog
+    }
+
+    fun showItemsToAdd(addBooksOption: Boolean) {
+        this.addBooksOption = addBooksOption
+    }
+
+    fun addBookToCollection(bookId: Long) {
+        viewModelScope.launch {
+            appRepository.addBookToCollection(id, bookId)
+        }
+    }
+
+    fun removeBookFromCollection(bookId: Long) {
+        viewModelScope.launch {
+            appRepository.removeBookFromCollection(id, bookId)
+        }
     }
 
     fun deleteCollection() {
@@ -73,5 +119,6 @@ class CollectionDetailViewModel(
                 )
             }
         }
+        private const val TIMEOUT_MILLIS = 5_000L
     }
 }

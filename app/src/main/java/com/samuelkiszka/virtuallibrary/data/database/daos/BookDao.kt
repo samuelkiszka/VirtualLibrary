@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.samuelkiszka.virtuallibrary.data.database.entities.BookEntity
+import com.samuelkiszka.virtuallibrary.data.models.AddListItemModel
 import com.samuelkiszka.virtuallibrary.data.models.BookListModel
 import kotlinx.coroutines.flow.Flow
 
@@ -46,4 +47,24 @@ interface BookDao {
         WHERE id = :id
     """)
     fun getBookById(id: Long): Flow<BookEntity>
+
+    @Query("""
+        SELECT id, title
+        FROM books
+        WHERE id NOT IN (
+            SELECT bookId
+            FROM collection_books
+            WHERE collectionId = :collectionId
+        )
+        ORDER BY title ASC
+    """)
+    fun getBooksNotInCollection(collectionId: Long): Flow<List<AddListItemModel>>
+
+    @Query("""
+        SELECT book.id, book.title, book.author, book.coverUrl
+        FROM books book JOIN collection_books cb ON book.id = cb.bookId
+        WHERE cb.collectionId = :collectionId
+        ORDER BY book.title ASC
+    """)
+    fun getBooksInCollection(collectionId: Long): Flow<List<BookListModel>>
 }

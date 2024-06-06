@@ -31,6 +31,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.samuelkiszka.virtuallibrary.R
 import com.samuelkiszka.virtuallibrary.data.models.BookListModel
+import com.samuelkiszka.virtuallibrary.ui.common.BookListCard
 import com.samuelkiszka.virtuallibrary.ui.common.VirtualLibraryBottomBar
 import com.samuelkiszka.virtuallibrary.ui.common.VirtualLibrarySearchBar
 import com.samuelkiszka.virtuallibrary.ui.common.VirtualLibraryTopBar
@@ -116,50 +117,6 @@ fun BookList(
                     }
             )
         }
-    }
-}
-
-@Composable
-fun BookListCard(
-    book: BookListModel,
-    modifier: Modifier = Modifier
-) {
-    Card(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(bottom = dimensionResource(id = R.dimen.padding_little))
-            .height(110.dp)
-    ){
-        Row(
-            modifier = Modifier
-                .fillMaxSize()
-        ) {
-            AsyncImage(
-                model = ImageRequest.Builder(context = LocalContext.current)
-                    .data(book.coverUrl)
-                    .crossfade(true)
-                    .build(),
-                contentDescription = book.title,
-                contentScale = ContentScale.FillBounds,
-                error = painterResource(id = R.drawable.demo_book_cover),
-                placeholder = painterResource(id = R.drawable.demo_book_cover),
-                modifier = Modifier
-                    .width(dimensionResource(id = R.dimen.list_image_width))
-            )
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(dimensionResource(id = R.dimen.padding_little))
-            ){
-                Text(
-                    text = book.title
-                )
-                Text(
-                    text = book.author
-                )
-            }
-        }
-
     }
 }
 

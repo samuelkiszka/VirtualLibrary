@@ -41,7 +41,7 @@ fun AddEditCollectionScreen(
     Scaffold(
         topBar = {
             VirtualLibraryTopBar(
-                screenTitleId = R.string.add_edit_collection_screen_name,
+                screenTitle = "",
                 canNavigateBack = true,
                 navigateBack = { navController.navigateUp() }
             )
@@ -110,7 +110,7 @@ fun ValueEditingFields(
             onValueChange = { viewModel.updateDescription(it) },
             label = { Text("Description") },
             keyboardOptions = KeyboardOptions(
-                imeAction = ImeAction.Done
+                imeAction = ImeAction.Default
             ),
             modifier = Modifier
                 .fillMaxWidth()

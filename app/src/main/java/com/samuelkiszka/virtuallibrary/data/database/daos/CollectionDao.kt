@@ -6,6 +6,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.samuelkiszka.virtuallibrary.data.database.entities.BookEntity
 import com.samuelkiszka.virtuallibrary.data.database.entities.CollectionEntity
+import com.samuelkiszka.virtuallibrary.data.models.BookCollectionListModel
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -38,4 +39,24 @@ interface CollectionDao {
         FROM collections
     """)
     fun getCollectionList(): Flow<List<CollectionEntity>>
+
+
+    @Query("""
+        SELECT book.id, book.coverUrl 
+        FROM books book LEFT JOIN collection_books cb ON book.id = cb.bookId
+        WHERE cb.collectionId = :collectionId
+    """)
+    suspend fun getBooksByCollectionId(collectionId: Long): List<BookCollectionListModel>
+
+    @Query("""
+        REPLACE INTO collection_books (collectionId, bookId)
+        VALUES (:collectionId, :bookId)
+    """)
+    suspend fun addBookToCollection(collectionId: Long, bookId: Long)
+
+    @Query("""
+        DELETE FROM collection_books
+        WHERE collectionId = :collectionId AND bookId = :bookId
+    """)
+    suspend fun removeBookFromCollection(collectionId: Long, bookId: Long)
 }
