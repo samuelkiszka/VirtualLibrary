@@ -14,6 +14,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.AddCircle
 import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -104,7 +105,10 @@ fun SearchListBody(
         )
         when (viewModel.searchListUiState) {
             is SearchListUiState.Loading -> LoadingScreen()
-            is SearchListUiState.Error -> ErrorScreen()
+            is SearchListUiState.Error -> AddNewEntityProposal(
+                proposalText = stringResource(id = R.string.add_book_error_text),
+                onAddButtonClicked = onAddButtonClicked
+            )
             is SearchListUiState.Success -> SearchBookList(
                 bookList = (viewModel.searchListUiState as SearchListUiState.Success).bookList,
                 onBookClicked = onBookClicked
@@ -121,55 +125,17 @@ fun SearchListBody(
 fun LoadingScreen(
     modifier: Modifier = Modifier
 ) {
-    Text(
-        text = "Loading...",
-        modifier = modifier
-    )
-}
-
-@Composable
-fun ErrorScreen(
-    modifier: Modifier = Modifier
-) {
-    Text(
-        text = "Error...",
-        modifier = modifier
-    )
-}
-
-@Composable
-fun AddNewBookText(
-    onAddButtonClicked: () -> Unit,
-    modifier: Modifier = Modifier
-) {
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
             .fillMaxSize()
     ) {
-         Text(
-             text = stringResource(id = R.string.add_book_text),
-             style = MaterialTheme.typography.bodyLarge,
-             textAlign = TextAlign.Center,
-             modifier = Modifier
-                 .padding(
-                     horizontal = dimensionResource(id = R.dimen.padding_medium)
-                 ),
-
-         )
-        IconButton(
-            onClick = {
-                onAddButtonClicked()
-            }
-        ) {
-            Icon(
-                imageVector = Icons.Rounded.AddCircle,
-                contentDescription = stringResource(R.string.add_book_button),
-                modifier = Modifier
-                    .size(150.dp)
-            )
-        }
+        CircularProgressIndicator(
+            modifier = Modifier.width(64.dp),
+            color = MaterialTheme.colorScheme.secondary,
+            trackColor = MaterialTheme.colorScheme.surfaceVariant,
+        )
     }
 }
 

@@ -20,7 +20,8 @@
     <string name="cancel_button_text">Cancel</string>
     <string name="save_changes_button_text">Save changes</string>
 
-    <string name="add_book_text">To find a book online, \nsimply type in the title or create a new record by clicking the button below</string>
+    <string name="add_book_text">To find a book online, \nsimply type in the title or create a new book yourself!</string>
+    <string name="add_book_error_text">Some error occurred while searching for books. Please try again later or add new book yourself!</string>
     <string name="loading">Loading..</string>
     <string name="book_delete_title">Delete book</string>
     <string name="book_delete_text">Do you really want to delete book %1$s?</string>

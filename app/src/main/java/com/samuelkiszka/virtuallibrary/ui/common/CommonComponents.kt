@@ -293,6 +293,21 @@ fun SaveButton(
 }
 
 @Composable
+fun Divider() {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(
+                MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f)
+            )
+            .height(2.dp)
+            .padding(
+                vertical = dimensionResource(id = R.dimen.padding_little),
+            )
+    )
+}
+
+@Composable
 fun BookListCard(
     book: BookListModel,
     modifier: Modifier = Modifier

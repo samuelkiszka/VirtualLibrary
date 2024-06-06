@@ -251,12 +251,13 @@ fun Header(
                 .crossfade(true)
                 .build(),
             contentDescription = "",
-            contentScale = ContentScale.FillWidth,
+            contentScale = ContentScale.FillBounds,
             error = painterResource(id = R.drawable.demo_book_cover),
             placeholder = painterResource(id = R.drawable.demo_book_cover),
             modifier = Modifier
                 .padding(end = dimensionResource(id = R.dimen.padding_around))
                 .width(dimensionResource(id = R.dimen.detail_image_width))
+                .height(dimensionResource(id = R.dimen.detail_image_height))
                 .clip(MaterialTheme.shapes.small)
         )
         Box(

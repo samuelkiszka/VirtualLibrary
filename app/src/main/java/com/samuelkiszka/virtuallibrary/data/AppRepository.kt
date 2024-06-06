@@ -136,7 +136,7 @@ class DefaultAppRepository(
         return collectionDao.getCollectionList().map { collectionList ->
             collectionList.map { collection ->
                 CollectionListModel(
-                    id = collection.id.toInt(),
+                    id = collection.id,
                     name = collection.name,
                     books = getCollectionBooks(collection.id)
                 )

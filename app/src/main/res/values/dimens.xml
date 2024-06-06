@@ -11,6 +11,10 @@
     <dimen name="list_image_width">74sp</dimen>
     <dimen name="list_card_height">110sp</dimen>
 
+    <!-- Collection values -->
+    <dimen name="collection_image_height">150sp</dimen>
+    <dimen name="collection_image_width">150sp</dimen>
+
     <!-- Detail values -->
     <dimen name="detail_image_height">211sp</dimen>
     <dimen name="detail_image_width">150sp</dimen>

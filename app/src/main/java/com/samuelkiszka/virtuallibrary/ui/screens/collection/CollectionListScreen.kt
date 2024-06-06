@@ -1,10 +1,13 @@
 package com.samuelkiszka.virtuallibrary.ui.screens.collection
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -36,6 +39,7 @@ import com.samuelkiszka.virtuallibrary.data.mocks.CollectionListModelMock
 import com.samuelkiszka.virtuallibrary.data.models.BookCollectionListModel
 import com.samuelkiszka.virtuallibrary.data.models.CollectionListModel
 import com.samuelkiszka.virtuallibrary.ui.common.AddNewEntityProposal
+import com.samuelkiszka.virtuallibrary.ui.common.Divider
 import com.samuelkiszka.virtuallibrary.ui.common.VirtualLibraryBottomBar
 import com.samuelkiszka.virtuallibrary.ui.common.VirtualLibrarySearchBar
 import com.samuelkiszka.virtuallibrary.ui.common.VirtualLibraryTopBar
@@ -94,7 +98,7 @@ fun CollectionListScreen(
         CollectionListBody(
             collections = uiState.value.collectionList,
             onBookClicked = {
-
+                navController.navigate("${LibraryDetailDestination.route}/$it")
             },
             onCollectionClicked = {
                 navController.navigate("${CollectionDetailDestination.route}/$it")
@@ -115,8 +119,8 @@ fun CollectionListScreen(
 @Composable
 fun CollectionListBody(
     collections: List<CollectionListModel>,
-    onBookClicked: (Int) -> Unit,
-    onCollectionClicked: (Int) -> Unit,
+    onBookClicked: (Long) -> Unit,
+    onCollectionClicked: (Long) -> Unit,
     onNewCollectionClicked: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -141,9 +145,9 @@ fun CollectionListBody(
 @Composable
 fun CollectionList(
     collections: List<CollectionListModel>,
+    onBookClicked: (Long) -> Unit,
+    onCollectionClicked: (Long) -> Unit,
     modifier: Modifier = Modifier,
-    onBookClicked: (Int) -> Unit,
-    onCollectionClicked: (Int) -> Unit
 ) {
     LazyColumn(
         modifier = modifier
@@ -163,8 +167,8 @@ fun CollectionList(
 fun CollectionCard(
     collection: CollectionListModel,
     modifier: Modifier = Modifier,
-    onBookClicked: (Int) -> Unit,
-    onCollectionClicked: (Int) -> Unit
+    onBookClicked: (Long) -> Unit,
+    onCollectionClicked: (Long) -> Unit
 ) {
     Column(
         modifier = modifier
@@ -199,7 +203,7 @@ fun CollectionCard(
 fun BookCard(
     book: BookCollectionListModel,
     modifier: Modifier = Modifier,
-    onBookClicked: (Int) -> Unit
+    onBookClicked: (Long) -> Unit
 ) {
     AsyncImage(
         model = ImageRequest.Builder(context = LocalContext.current)
@@ -207,7 +211,7 @@ fun BookCard(
             .crossfade(true)
             .build(),
         contentDescription = "",
-        contentScale = ContentScale.FillWidth,
+        contentScale = ContentScale.Crop,
         error = painterResource(id = R.drawable.demo_book_cover),
         placeholder = painterResource(id = R.drawable.demo_book_cover),
         modifier = modifier

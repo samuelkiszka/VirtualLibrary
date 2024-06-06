@@ -30,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavHostController
@@ -38,6 +39,7 @@ import com.samuelkiszka.virtuallibrary.data.models.AddListItemModel
 import com.samuelkiszka.virtuallibrary.ui.common.AddNewEntityProposal
 import com.samuelkiszka.virtuallibrary.ui.common.BookListCard
 import com.samuelkiszka.virtuallibrary.ui.common.DefaultAlertDialog
+import com.samuelkiszka.virtuallibrary.ui.common.Divider
 import com.samuelkiszka.virtuallibrary.ui.common.VirtualLibraryTopBar
 import com.samuelkiszka.virtuallibrary.ui.navigation.NavigationDestination
 import com.samuelkiszka.virtuallibrary.ui.screens.library.LibraryDetailDestination
@@ -173,7 +175,6 @@ fun CollectionDetailBody(
         navigateToAddBook = navigateToAddBook
     )
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
     ) {
         Text(
@@ -189,16 +190,6 @@ fun CollectionDetailBody(
             )
         }
         else {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(MaterialTheme.colorScheme.onBackground)
-                    .height(2.dp)
-                    .padding(
-                        vertical = dimensionResource(id = R.dimen.padding_little),
-                        horizontal = 30.dp
-                    )
-            )
             LazyColumn {
                 items(collectionBooks.value) {
                     BookListCard(
