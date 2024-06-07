@@ -19,4 +19,7 @@
     <dimen name="detail_image_height">211sp</dimen>
     <dimen name="detail_image_width">150sp</dimen>
     <dimen name="detail_date_picker_height">50sp</dimen>
+
+    <!-- Icon values -->
+    <dimen name="icon_size">25sp</dimen>
 </resources>

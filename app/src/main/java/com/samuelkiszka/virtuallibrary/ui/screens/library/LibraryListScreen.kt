@@ -19,6 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.samuelkiszka.virtuallibrary.R
+import com.samuelkiszka.virtuallibrary.data.enums.NavbarCurrentPosition
 import com.samuelkiszka.virtuallibrary.data.models.BookListModel
 import com.samuelkiszka.virtuallibrary.ui.common.BookListCard
 import com.samuelkiszka.virtuallibrary.ui.common.VirtualLibraryBottomBar
@@ -48,7 +49,7 @@ fun LibraryListScreen(
         bottomBar = {
             VirtualLibraryBottomBar(
                 navController = navController,
-                currentScreenRoute = LibraryListDestination.route
+                currentScreen = NavbarCurrentPosition.LIBRARY
             )
         }
     ) { innerPadding ->

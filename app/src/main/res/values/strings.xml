@@ -1,9 +1,8 @@
 <resources>
+    <!-- App name -->
     <string name="app_name">Virtual Library</string>
 
-    <string name="library_list_search_hint">Book title or author name..</string>
-    <string name="collection_list_search_hint">Collection name..</string>
-
+    <!-- Screen names -->
     <string name="library_list_screen_name">Library</string>
     <string name="library_detail_screen_name">Book Detail</string>
     <string name="collection_list_screen_name">Collections</string>
@@ -11,6 +10,12 @@
     <string name="search_list_screen_name">Search</string>
     <string name="add_edit_book_screen_name">Add new book</string>
     <string name="add_edit_collection_screen_name">Add new collection</string>
+
+    <!-- Search bar hints -->
+    <string name="library_list_search_hint">Book title or author name..</string>
+    <string name="collection_list_search_hint">Collection name..</string>
+    <string name="search_list_search_hint">Book title or author name..</string>
+
 
     <string name="back_button">Back</string>
     <string name="option_button">Option button</string>

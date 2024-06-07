@@ -15,7 +15,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.rounded.AddCircle
@@ -48,6 +48,7 @@ import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.samuelkiszka.virtuallibrary.R
+import com.samuelkiszka.virtuallibrary.data.enums.NavbarCurrentPosition
 import com.samuelkiszka.virtuallibrary.data.models.AddListItemModel
 import com.samuelkiszka.virtuallibrary.data.models.BookListModel
 import com.samuelkiszka.virtuallibrary.ui.screens.collection.CollectionListDestination
@@ -113,7 +114,7 @@ fun VirtualLibraryTopBar(
             if (canNavigateBack) {
                 IconButton(onClick = navigateBack) {
                     Icon(
-                        imageVector = Icons.Filled.ArrowBack,
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = stringResource(R.string.back_button)
                     )
                 }
@@ -140,8 +141,10 @@ fun VirtualLibraryTopBar(
 @Composable
 fun VirtualLibraryBottomBar(
     navController: NavHostController,
-    currentScreenRoute: String = ""
+    currentScreen: NavbarCurrentPosition
 ) {
+    val selected = MaterialTheme.colorScheme.onPrimary
+    val idle = MaterialTheme.colorScheme.secondary
     Box(
         modifier = Modifier
             .background(color = MaterialTheme.colorScheme.primary)
@@ -156,15 +159,22 @@ fun VirtualLibraryBottomBar(
                 modifier = Modifier
                     .padding(5.dp)
             ) {
-                if (currentScreenRoute == LibraryListDestination.route) {
-                    Text(
-                        text = "Library",
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    val libraryColor = if (currentScreen == NavbarCurrentPosition.LIBRARY) selected else idle
+                    Icon(
+                        painter = painterResource(id = R.drawable.icon_library),
+                        contentDescription = stringResource(id = R.string.library_list_screen_name),
+                        tint = libraryColor,
+                        modifier = Modifier
+                            .size(dimensionResource(id = R.dimen.icon_size)),
                     )
-                }
-                else {
                     Text(
                         text = "Library",
-                        color = MaterialTheme.colorScheme.secondary)
+                        color = libraryColor,
+                        style = MaterialTheme.typography.bodySmall
+                    )
                 }
             }
             Button(
@@ -172,15 +182,22 @@ fun VirtualLibraryBottomBar(
                 modifier = Modifier
                     .padding(5.dp)
             ) {
-                if (currentScreenRoute == CollectionListDestination.route) {
-                    Text(
-                        text = "Collection"
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    val collectionsColor = if (currentScreen == NavbarCurrentPosition.COLLECTION) selected else idle
+                    Icon(
+                        painter = painterResource(id = R.drawable.icon_collections),
+                        contentDescription = stringResource(id = R.string.collection_list_screen_name),
+                        tint = collectionsColor,
+                        modifier = Modifier
+                            .size(dimensionResource(id = R.dimen.icon_size)),
                     )
-                }
-                else {
                     Text(
-                        text = "Collection",
-                        color = MaterialTheme.colorScheme.secondary)
+                        text = stringResource(id = R.string.collection_list_screen_name),
+                        color = collectionsColor,
+                        style = MaterialTheme.typography.bodySmall
+                    )
                 }
             }
             Button(
@@ -188,15 +205,22 @@ fun VirtualLibraryBottomBar(
                 modifier = Modifier
                     .padding(5.dp)
             ) {
-                if (currentScreenRoute == SearchListDestination.route) {
-                    Text(
-                        text = "Search"
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    val searchColor = if (currentScreen == NavbarCurrentPosition.SEARCH) selected else idle
+                    Icon(
+                        painter = painterResource(id = R.drawable.icon_search),
+                        contentDescription = stringResource(id = R.string.search_list_screen_name),
+                        tint = searchColor,
+                        modifier = Modifier
+                            .size(dimensionResource(id = R.dimen.icon_size)),
                     )
-                }
-                else {
                     Text(
                         text = "Search",
-                        color = MaterialTheme.colorScheme.secondary)
+                        color = searchColor,
+                        style = MaterialTheme.typography.bodySmall
+                    )
                 }
             }
         }
@@ -275,10 +299,10 @@ fun AddNewEntityProposal(
             }
         ) {
             Icon(
-                imageVector = Icons.Rounded.AddCircle,
+                painter = painterResource(id = R.drawable.icon_add_resource),
                 contentDescription = stringResource(R.string.add_item_button),
                 modifier = Modifier
-                    .size(150.dp)
+                    .size(50.dp)
             )
         }
     }

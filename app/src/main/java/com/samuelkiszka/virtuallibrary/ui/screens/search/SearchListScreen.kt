@@ -29,6 +29,7 @@ import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.samuelkiszka.virtuallibrary.R
+import com.samuelkiszka.virtuallibrary.data.enums.NavbarCurrentPosition
 import com.samuelkiszka.virtuallibrary.data.models.BookApiModel
 import com.samuelkiszka.virtuallibrary.ui.common.AddNewEntityProposal
 import com.samuelkiszka.virtuallibrary.ui.common.VirtualLibraryBottomBar
@@ -56,7 +57,7 @@ fun SearchListScreen(
         bottomBar = {
             VirtualLibraryBottomBar(
                 navController = navController,
-                currentScreenRoute = SearchListDestination.route
+                currentScreen = NavbarCurrentPosition.SEARCH
             )
         }
     ) { innerPadding ->
@@ -93,6 +94,7 @@ fun SearchListBody(
             .fillMaxSize()
     ) {
         VirtualLibrarySearchBar(
+            hintText = stringResource(id = R.string.search_list_search_hint),
             query = viewModel.query,
             onSearch = { viewModel.getBooksByQuery() },
             onQueryChange = { viewModel.updateQuery(it) }

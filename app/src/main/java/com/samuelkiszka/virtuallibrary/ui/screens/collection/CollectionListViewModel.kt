@@ -11,18 +11,11 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.samuelkiszka.virtuallibrary.VirtualLibraryApplication
 import com.samuelkiszka.virtuallibrary.data.AppRepository
-import com.samuelkiszka.virtuallibrary.data.mocks.CollectionListModelMock
-import com.samuelkiszka.virtuallibrary.data.models.BookListModel
 import com.samuelkiszka.virtuallibrary.data.models.CollectionListModel
-import com.samuelkiszka.virtuallibrary.ui.screens.library.LibraryListUiState
-import com.samuelkiszka.virtuallibrary.ui.screens.library.LibraryListViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
 
 data class CollectionListUiState(
     val collectionList: List<CollectionListModel> = emptyList()
@@ -41,7 +34,7 @@ class CollectionListViewModel(
             }
             .stateIn(
                 scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(CollectionListViewModel.TIMEOUT_MILLIS),
+                started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
                 initialValue = CollectionListUiState()
             )
 

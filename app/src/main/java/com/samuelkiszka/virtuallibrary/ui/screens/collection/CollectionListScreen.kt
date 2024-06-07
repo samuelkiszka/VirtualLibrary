@@ -27,6 +27,7 @@ import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.samuelkiszka.virtuallibrary.R
+import com.samuelkiszka.virtuallibrary.data.enums.NavbarCurrentPosition
 import com.samuelkiszka.virtuallibrary.data.models.BookCollectionListModel
 import com.samuelkiszka.virtuallibrary.data.models.CollectionListModel
 import com.samuelkiszka.virtuallibrary.ui.common.AddNewEntityProposal
@@ -80,7 +81,7 @@ fun CollectionListScreen(
         bottomBar = {
             VirtualLibraryBottomBar(
                 navController = navController,
-                currentScreenRoute = CollectionListDestination.route
+                currentScreen = NavbarCurrentPosition.COLLECTION
             )
         }
     ) { innerPadding ->
