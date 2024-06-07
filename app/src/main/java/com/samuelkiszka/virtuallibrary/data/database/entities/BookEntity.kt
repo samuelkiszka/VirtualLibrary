@@ -2,9 +2,7 @@ package com.samuelkiszka.virtuallibrary.data.database.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import androidx.room.TypeConverter
 import com.samuelkiszka.virtuallibrary.ui.screens.library.LibraryDetailUiState
-import org.jetbrains.annotations.NotNull
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 

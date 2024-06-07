@@ -1,6 +1,5 @@
 package com.samuelkiszka.virtuallibrary.data
 
-import android.util.Log
 import com.samuelkiszka.virtuallibrary.data.database.daos.BookDao
 import com.samuelkiszka.virtuallibrary.data.database.daos.CollectionDao
 import com.samuelkiszka.virtuallibrary.data.database.entities.BookEntity

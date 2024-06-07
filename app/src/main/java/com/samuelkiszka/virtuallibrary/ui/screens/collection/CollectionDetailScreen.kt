@@ -22,11 +22,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import com.samuelkiszka.virtuallibrary.R
 import com.samuelkiszka.virtuallibrary.data.models.AddListItemModel
-import com.samuelkiszka.virtuallibrary.ui.common.AddNewEntityProposal
-import com.samuelkiszka.virtuallibrary.ui.common.BookListCard
-import com.samuelkiszka.virtuallibrary.ui.common.DefaultAlertDialog
-import com.samuelkiszka.virtuallibrary.ui.common.MembershipDialog
-import com.samuelkiszka.virtuallibrary.ui.common.VirtualLibraryTopBar
+import com.samuelkiszka.virtuallibrary.ui.components.AddNewEntityProposal
+import com.samuelkiszka.virtuallibrary.ui.components.BookListCard
+import com.samuelkiszka.virtuallibrary.ui.components.DefaultAlertDialog
+import com.samuelkiszka.virtuallibrary.ui.components.MembershipDialog
+import com.samuelkiszka.virtuallibrary.ui.components.VirtualLibraryTopBar
 import com.samuelkiszka.virtuallibrary.ui.navigation.NavigationDestination
 import com.samuelkiszka.virtuallibrary.ui.screens.library.LibraryDetailDestination
 import com.samuelkiszka.virtuallibrary.ui.screens.search.SearchListDestination
@@ -36,7 +36,7 @@ object CollectionDetailDestination : NavigationDestination {
     override val route = "CollectionDetail"
     override val titleRes = R.string.screen_collection_detail
     const val ARGS = "id"
-    val routeWithArgs = "${CollectionDetailDestination.route}/{$ARGS}"
+    val routeWithArgs = "$route/{$ARGS}"
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

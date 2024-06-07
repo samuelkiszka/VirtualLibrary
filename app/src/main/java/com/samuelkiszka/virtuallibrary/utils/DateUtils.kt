@@ -1,19 +1,20 @@
-import android.os.Build
-import androidx.annotation.RequiresApi
+package com.samuelkiszka.virtuallibrary.utils
+
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Locale
+
 class DateUtils {
-    fun convertMillisToLocalDate(millis: Long) : LocalDate {
+    private fun convertMillisToLocalDate(millis: Long) : LocalDate {
         return Instant
             .ofEpochMilli(millis)
             .atZone(ZoneId.systemDefault())
             .toLocalDate()
     }
-    fun convertMillisToLocalDateWithFormatter(date: LocalDate, dateTimeFormatter: DateTimeFormatter) : LocalDate {
-        //Convert the date to a long in millis using a dateformmater
+    private fun convertMillisToLocalDateWithFormatter(date: LocalDate, dateTimeFormatter: DateTimeFormatter) : LocalDate {
+        //Convert the date to a long in millis using a formatter
         val dateInMillis = LocalDate.parse(date.format(dateTimeFormatter), dateTimeFormatter)
             .atStartOfDay(ZoneId.systemDefault())
             .toInstant()
@@ -25,7 +26,7 @@ class DateUtils {
             .atZone(ZoneId.systemDefault())
             .toLocalDate()
     }
-    fun dateToString(date: LocalDate): String {
+    private fun dateToString(date: LocalDate): String {
         val dateFormatter = DateTimeFormatter.ofPattern("dd-MMM-yyyy", Locale.getDefault())
         val dateInMillis = convertMillisToLocalDateWithFormatter(date, dateFormatter)
         return dateFormatter.format(dateInMillis)

@@ -4,11 +4,9 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.samuelkiszka.virtuallibrary.data.database.entities.BookEntity
 import com.samuelkiszka.virtuallibrary.data.database.entities.CollectionEntity
 import com.samuelkiszka.virtuallibrary.data.models.AddListItemModel
 import com.samuelkiszka.virtuallibrary.data.models.BookCollectionListModel
-import com.samuelkiszka.virtuallibrary.data.models.BookListModel
 import kotlinx.coroutines.flow.Flow
 
 @Dao

@@ -1,16 +1,22 @@
 package com.samuelkiszka.virtuallibrary.ui.screens.collection
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -30,10 +36,10 @@ import com.samuelkiszka.virtuallibrary.R
 import com.samuelkiszka.virtuallibrary.data.enums.NavbarCurrentPosition
 import com.samuelkiszka.virtuallibrary.data.models.BookCollectionListModel
 import com.samuelkiszka.virtuallibrary.data.models.CollectionListModel
-import com.samuelkiszka.virtuallibrary.ui.common.AddNewEntityProposal
-import com.samuelkiszka.virtuallibrary.ui.common.VirtualLibraryBottomBar
-import com.samuelkiszka.virtuallibrary.ui.common.VirtualLibrarySearchBar
-import com.samuelkiszka.virtuallibrary.ui.common.VirtualLibraryTopBar
+import com.samuelkiszka.virtuallibrary.ui.components.AddNewEntityProposal
+import com.samuelkiszka.virtuallibrary.ui.components.VirtualLibraryBottomBar
+import com.samuelkiszka.virtuallibrary.ui.components.VirtualLibrarySearchBar
+import com.samuelkiszka.virtuallibrary.ui.components.VirtualLibraryTopBar
 import com.samuelkiszka.virtuallibrary.ui.navigation.NavigationDestination
 import com.samuelkiszka.virtuallibrary.ui.screens.library.LibraryDetailDestination
 
@@ -183,12 +189,37 @@ fun CollectionCard(
             .clickable {
                 onCollectionClicked(collection.id)
             }
+            .background(
+                color = MaterialTheme.colorScheme.surfaceVariant,
+                shape = MaterialTheme.shapes.medium
+            )
+            .fillMaxWidth()
     ) {
-        Text(
-            text = collection.name,
-            modifier = modifier
-                .padding(bottom = dimensionResource(id = R.dimen.padding_around))
-        )
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier
+                .fillMaxWidth()
+        ) {
+            Text(
+                text = collection.name,
+                style = MaterialTheme.typography.titleLarge,
+                modifier = modifier
+                    .padding(
+                        horizontal = dimensionResource(id = R.dimen.padding_around),
+                        vertical = dimensionResource(id = R.dimen.padding_little),
+                    )
+            )
+            Icon(
+                painter = painterResource(id = R.drawable.icont_detail),
+                contentDescription = "",
+                modifier = modifier
+                    .size(dimensionResource(id = R.dimen.icon_size))
+                    .padding(
+                        top = dimensionResource(id = R.dimen.padding_around),
+                        end = dimensionResource(id = R.dimen.padding_around)
+                    )
+            )
+        }
         LazyRow(
             modifier = modifier
                 .padding(bottom = dimensionResource(id = R.dimen.padding_around))

@@ -1,6 +1,6 @@
 package com.samuelkiszka.virtuallibrary.ui.screens.library
 
-import DateUtils
+import com.samuelkiszka.virtuallibrary.utils.DateUtils
 import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.getValue
@@ -18,8 +18,6 @@ import com.samuelkiszka.virtuallibrary.VirtualLibraryApplication
 import com.samuelkiszka.virtuallibrary.data.AppRepository
 import com.samuelkiszka.virtuallibrary.data.database.entities.BookEntity
 import com.samuelkiszka.virtuallibrary.data.models.AddListItemModel
-import com.samuelkiszka.virtuallibrary.data.models.BookListModel
-import com.samuelkiszka.virtuallibrary.ui.screens.collection.CollectionDetailViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.filterNotNull

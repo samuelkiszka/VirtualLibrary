@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -61,10 +62,11 @@ import coil.request.ImageRequest
 import com.samuelkiszka.virtuallibrary.R
 import com.samuelkiszka.virtuallibrary.data.database.entities.BookEntity
 import com.samuelkiszka.virtuallibrary.data.models.AddListItemModel
-import com.samuelkiszka.virtuallibrary.ui.common.DefaultAlertDialog
-import com.samuelkiszka.virtuallibrary.ui.common.MembershipDialog
-import com.samuelkiszka.virtuallibrary.ui.common.Rating
-import com.samuelkiszka.virtuallibrary.ui.common.VirtualLibraryTopBar
+import com.samuelkiszka.virtuallibrary.ui.components.DefaultAlertDialog
+import com.samuelkiszka.virtuallibrary.ui.components.MembershipDialog
+import com.samuelkiszka.virtuallibrary.ui.components.Rating
+import com.samuelkiszka.virtuallibrary.ui.components.SaveButton
+import com.samuelkiszka.virtuallibrary.ui.components.VirtualLibraryTopBar
 import com.samuelkiszka.virtuallibrary.ui.navigation.NavigationDestination
 import com.samuelkiszka.virtuallibrary.ui.screens.collection.CollectionDetailDestination
 import com.samuelkiszka.virtuallibrary.ui.screens.collection.CollectionListDestination
@@ -128,26 +130,14 @@ fun LibraryDetailScreen(
         },
         bottomBar = {
             if(viewModel.uiState.changed) {
-                Button(
-                    onClick = {
+                SaveButton(
+                    text = stringResource(R.string.button_save_changes),
+                    onSave = {
                         coroutineScope.launch {
                             viewModel.saveChanges()
                         }
-                    },
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.primaryContainer,
-                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer
-                    ),
-                    shape = MaterialTheme.shapes.medium,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = dimensionResource(id = R.dimen.padding_around))
-                ) {
-                    Text(
-                        text = stringResource(R.string.button_save_changes),
-                        style = MaterialTheme.typography.titleMedium
-                    )
-                }
+                    }
+                )
             }
         }
     ) { innerPadding ->
@@ -345,6 +335,9 @@ fun Collections(
                 color = MaterialTheme.colorScheme.secondaryContainer,
                 shape = MaterialTheme.shapes.medium
             )
+            .clickable(
+                onClick = toggleManageCollectionsDialog
+            )
     ) {
         if (collections.isEmpty()) {
             Text(
@@ -388,9 +381,10 @@ fun Collections(
             modifier = Modifier
         ) {
             Icon(
-                imageVector = Icons.Filled.Create,
+                painter = painterResource(id = R.drawable.icon_collections),
                 contentDescription = stringResource(R.string.button_edit),
                 modifier = Modifier
+                    .size(dimensionResource(id = R.dimen.icon_size))
             )
         }
     }
@@ -528,10 +522,11 @@ fun ShowDate(
                 )
             }
             Icon(
-                imageVector = Icons.Filled.DateRange,
+                painter = painterResource(id = R.drawable.icon_calendar),
                 contentDescription = stringResource(R.string.button_date_picker),
                 tint = MaterialTheme.colorScheme.onPrimaryContainer,
                 modifier = Modifier
+                    .size(dimensionResource(id = R.dimen.icon_size_small))
             )
         }
     }

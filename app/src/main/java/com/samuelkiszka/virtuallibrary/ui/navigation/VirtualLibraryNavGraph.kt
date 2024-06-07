@@ -54,7 +54,8 @@ fun VirtualLibraryNavGraph(
         ) {
             val viewModel: LibraryDetailViewModel = viewModel(factory = LibraryDetailViewModel.Factory)
             LibraryDetailScreen(
-                navController = navController
+                navController = navController,
+                viewModel = viewModel
             )
         }
         composable(

@@ -1,4 +1,4 @@
-package com.samuelkiszka.virtuallibrary.ui.common
+package com.samuelkiszka.virtuallibrary.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.AlertDialog
@@ -118,8 +117,10 @@ fun VirtualLibraryTopBar(
             if (canNavigateBack) {
                 IconButton(onClick = navigateBack) {
                     Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = stringResource(R.string.button_back)
+                        painter = painterResource(id = R.drawable.icon_back),
+                        contentDescription = stringResource(R.string.button_back),
+                        modifier = Modifier
+                            .size(dimensionResource(id = R.dimen.icon_size))
                     )
                 }
             }
@@ -314,6 +315,7 @@ fun AddNewEntityProposal(
 
 @Composable
 fun SaveButton(
+    text: String,
     onSave: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -321,8 +323,14 @@ fun SaveButton(
         onClick = { onSave() },
         modifier = modifier
             .fillMaxWidth()
+            .padding(
+                horizontal = dimensionResource(id = R.dimen.padding_medium)
+            )
     ) {
-        Text(stringResource(R.string.button_save))
+        Text(
+            text = text,
+            style = MaterialTheme.typography.titleMedium
+        )
     }
 }
 
@@ -362,36 +370,40 @@ fun BookListCard(
                     modifier = Modifier
                         .align(Alignment.TopStart)
                 ) {
-                    Text(
-                        text = book.title,
+                    Row(
+                        horizontalArrangement = Arrangement.SpaceBetween,
                         modifier = Modifier
-                    )
+                            .fillMaxWidth()
+                    ) {
+                        Text(
+                            text = book.title,
+                            modifier = Modifier
+                                .weight(1f)
+                        )
+                        if (book.pagesRead == book.numberOfPages) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.icon_readed),
+                                contentDescription = "",
+                                modifier = Modifier
+                                    .size(dimensionResource(id = R.dimen.icon_size))
+                            )
+                        }
+                    }
                     Text(
                         text = book.author,
                         modifier = Modifier
                     )
                 }
                 if (book.pagesRead == book.numberOfPages || book.pagesRead == 0) {
-                    if (book.pagesRead == book.numberOfPages) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.icon_readed),
-                            contentDescription = "",
-                            modifier = Modifier
-                                .size(dimensionResource(id = R.dimen.icon_size))
-                                .align(Alignment.TopEnd)
-                        )
-                    }
-                    if (book.rating != 0.0f) {
-                        Rating(
-                            rating = book.rating,
-                            updateRating = {},
-                            numberOfStars = book.rating.toInt(),
-                            withLabel = false,
-                            size = dimensionResource(id = R.dimen.list_card_stars_size),
-                            modifier = Modifier
-                                .align(Alignment.BottomEnd)
-                        )
-                    }
+                    Rating(
+                        rating = book.rating,
+                        updateRating = {},
+                        numberOfStars = book.rating.toInt(),
+                        withLabel = false,
+                        size = dimensionResource(id = R.dimen.list_card_stars_size),
+                        modifier = Modifier
+                            .align(Alignment.BottomEnd)
+                    )
                 }
                 else {
                     Column(

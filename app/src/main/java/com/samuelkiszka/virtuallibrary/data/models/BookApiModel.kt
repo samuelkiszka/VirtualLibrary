@@ -1,13 +1,13 @@
 package com.samuelkiszka.virtuallibrary.data.models
 
-import BooksWrapperSerializer
+import com.samuelkiszka.virtuallibrary.utils.BooksWrapperSerializer
 import kotlinx.serialization.Serializable
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
-//
-// Retrieve books by isbn
-//
+/**
+ * Data models for processing books retrieved by given ISBN
+ */
 @Serializable
 data class Authors (
     var url: String = "",
@@ -49,9 +49,9 @@ data class BooksWrapper (
     var books: Map<String, BookApiModel> = mapOf(),
 )
 
-//
-// Retrieve the ISBNs from the list of works
-//
+/*
+    * Data models for processing ISBNs retrieved by given query
+ */
 @Serializable
 data class Edition (
     var isbn: ArrayList<String> = arrayListOf()

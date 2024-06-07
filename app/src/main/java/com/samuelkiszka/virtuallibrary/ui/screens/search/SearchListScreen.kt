@@ -31,10 +31,10 @@ import coil.request.ImageRequest
 import com.samuelkiszka.virtuallibrary.R
 import com.samuelkiszka.virtuallibrary.data.enums.NavbarCurrentPosition
 import com.samuelkiszka.virtuallibrary.data.models.BookApiModel
-import com.samuelkiszka.virtuallibrary.ui.common.AddNewEntityProposal
-import com.samuelkiszka.virtuallibrary.ui.common.VirtualLibraryBottomBar
-import com.samuelkiszka.virtuallibrary.ui.common.VirtualLibrarySearchBar
-import com.samuelkiszka.virtuallibrary.ui.common.VirtualLibraryTopBar
+import com.samuelkiszka.virtuallibrary.ui.components.AddNewEntityProposal
+import com.samuelkiszka.virtuallibrary.ui.components.VirtualLibraryBottomBar
+import com.samuelkiszka.virtuallibrary.ui.components.VirtualLibrarySearchBar
+import com.samuelkiszka.virtuallibrary.ui.components.VirtualLibraryTopBar
 import com.samuelkiszka.virtuallibrary.ui.navigation.NavigationDestination
 import com.samuelkiszka.virtuallibrary.ui.screens.library.AddEditBookDestination
 

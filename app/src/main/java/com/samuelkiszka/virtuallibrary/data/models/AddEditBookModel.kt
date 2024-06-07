@@ -1,6 +1,5 @@
 package com.samuelkiszka.virtuallibrary.data.models
 
-import android.util.Log
 import com.google.gson.Gson
 import com.samuelkiszka.virtuallibrary.data.database.entities.BookEntity
 import java.net.URLDecoder

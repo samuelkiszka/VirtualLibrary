@@ -1,3 +1,5 @@
+package com.samuelkiszka.virtuallibrary.utils
+
 import com.samuelkiszka.virtuallibrary.data.models.BookApiModel
 import com.samuelkiszka.virtuallibrary.data.models.BooksWrapper
 import kotlinx.serialization.KSerializer

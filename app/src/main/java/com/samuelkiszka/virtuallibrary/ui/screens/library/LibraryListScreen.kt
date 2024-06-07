@@ -21,11 +21,11 @@ import androidx.navigation.NavHostController
 import com.samuelkiszka.virtuallibrary.R
 import com.samuelkiszka.virtuallibrary.data.enums.NavbarCurrentPosition
 import com.samuelkiszka.virtuallibrary.data.models.BookListModel
-import com.samuelkiszka.virtuallibrary.ui.common.AddNewEntityProposal
-import com.samuelkiszka.virtuallibrary.ui.common.BookListCard
-import com.samuelkiszka.virtuallibrary.ui.common.VirtualLibraryBottomBar
-import com.samuelkiszka.virtuallibrary.ui.common.VirtualLibrarySearchBar
-import com.samuelkiszka.virtuallibrary.ui.common.VirtualLibraryTopBar
+import com.samuelkiszka.virtuallibrary.ui.components.AddNewEntityProposal
+import com.samuelkiszka.virtuallibrary.ui.components.BookListCard
+import com.samuelkiszka.virtuallibrary.ui.components.VirtualLibraryBottomBar
+import com.samuelkiszka.virtuallibrary.ui.components.VirtualLibrarySearchBar
+import com.samuelkiszka.virtuallibrary.ui.components.VirtualLibraryTopBar
 import com.samuelkiszka.virtuallibrary.ui.navigation.NavigationDestination
 import com.samuelkiszka.virtuallibrary.ui.screens.search.SearchListDestination
 import com.samuelkiszka.virtuallibrary.ui.theme.VirtualLibraryTheme

@@ -20,8 +20,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.navigation.NavHostController
 import com.samuelkiszka.virtuallibrary.R
-import com.samuelkiszka.virtuallibrary.ui.common.SaveButton
-import com.samuelkiszka.virtuallibrary.ui.common.VirtualLibraryTopBar
+import com.samuelkiszka.virtuallibrary.ui.components.SaveButton
+import com.samuelkiszka.virtuallibrary.ui.components.VirtualLibraryTopBar
 import com.samuelkiszka.virtuallibrary.ui.navigation.NavigationDestination
 import kotlinx.coroutines.launch
 
@@ -49,6 +49,7 @@ fun AddEditCollectionScreen(
         },
         bottomBar = {
             SaveButton(
+                text = stringResource(R.string.button_save),
                 onSave = {
                     coroutineScope.launch {
                         val id = viewModel.saveCollection()
