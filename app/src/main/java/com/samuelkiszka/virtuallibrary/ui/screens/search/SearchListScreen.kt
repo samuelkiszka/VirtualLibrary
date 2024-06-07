@@ -36,6 +36,7 @@ import com.samuelkiszka.virtuallibrary.ui.common.VirtualLibraryBottomBar
 import com.samuelkiszka.virtuallibrary.ui.common.VirtualLibrarySearchBar
 import com.samuelkiszka.virtuallibrary.ui.common.VirtualLibraryTopBar
 import com.samuelkiszka.virtuallibrary.ui.navigation.NavigationDestination
+import com.samuelkiszka.virtuallibrary.ui.screens.library.AddEditBookDestination
 
 object SearchListDestination : NavigationDestination {
     override val route = "SearchList"

@@ -16,6 +16,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.navigation.NavHostController
 import com.samuelkiszka.virtuallibrary.R
@@ -41,7 +42,7 @@ fun AddEditCollectionScreen(
     Scaffold(
         topBar = {
             VirtualLibraryTopBar(
-                screenTitle = "",
+                screenTitle = if (viewModel.id != 0) stringResource(R.string.screen_add_edit_collection_edit) else stringResource(R.string.screen_add_edit_collection_add),
                 canNavigateBack = true,
                 navigateBack = { navController.navigateUp() }
             )
@@ -98,7 +99,7 @@ fun ValueEditingFields(
         OutlinedTextField(
             value = viewModel.name,
             onValueChange = { viewModel.updateName(it) },
-            label = { Text("Name") },
+            label = { Text(stringResource(R.string.labebl_name)) },
             keyboardOptions = KeyboardOptions(
                 imeAction = ImeAction.Next
             ),
@@ -108,7 +109,7 @@ fun ValueEditingFields(
         OutlinedTextField(
             value = viewModel.description,
             onValueChange = { viewModel.updateDescription(it) },
-            label = { Text("Description") },
+            label = { Text(stringResource(R.string.label_description)) },
             keyboardOptions = KeyboardOptions(
                 imeAction = ImeAction.Default
             ),

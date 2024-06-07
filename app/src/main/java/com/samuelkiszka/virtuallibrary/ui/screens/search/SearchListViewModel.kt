@@ -48,7 +48,6 @@ class SearchListViewModel(
             searchListUiState = try {
                 SearchListUiState.Success(appRepository.getBooksByQuery(query))
             } catch (e: Exception) {
-                Log.e("BookRepository", "getIsbnList: ", e)
                 SearchListUiState.Error
             }
         }

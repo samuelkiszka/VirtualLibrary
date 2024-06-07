@@ -21,11 +21,13 @@ import androidx.navigation.NavHostController
 import com.samuelkiszka.virtuallibrary.R
 import com.samuelkiszka.virtuallibrary.data.enums.NavbarCurrentPosition
 import com.samuelkiszka.virtuallibrary.data.models.BookListModel
+import com.samuelkiszka.virtuallibrary.ui.common.AddNewEntityProposal
 import com.samuelkiszka.virtuallibrary.ui.common.BookListCard
 import com.samuelkiszka.virtuallibrary.ui.common.VirtualLibraryBottomBar
 import com.samuelkiszka.virtuallibrary.ui.common.VirtualLibrarySearchBar
 import com.samuelkiszka.virtuallibrary.ui.common.VirtualLibraryTopBar
 import com.samuelkiszka.virtuallibrary.ui.navigation.NavigationDestination
+import com.samuelkiszka.virtuallibrary.ui.screens.search.SearchListDestination
 import com.samuelkiszka.virtuallibrary.ui.theme.VirtualLibraryTheme
 
 object LibraryListDestination : NavigationDestination {
@@ -61,6 +63,9 @@ fun LibraryListScreen(
             searchQuery = viewModel.searchQuery,
             updateSearchQuery = viewModel::updateSearchQuery,
             bookSatisfiesQuery = viewModel::bookSatisfiesQuery,
+            onNewBookClicked = {
+                navController.navigate(SearchListDestination.route)
+            },
             modifier = Modifier.padding(
                 bottom = innerPadding.calculateBottomPadding(),
                 top = dimensionResource(id = R.dimen.top_bar_size)
@@ -76,6 +81,7 @@ fun LibraryListBody(
     searchQuery: String,
     updateSearchQuery: (String) -> Unit,
     bookSatisfiesQuery: (BookListModel) -> Boolean,
+    onNewBookClicked: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column (
@@ -88,6 +94,12 @@ fun LibraryListBody(
             query = searchQuery,
             onQueryChange = { updateSearchQuery(it) },
         )
+        if (books.isEmpty()) {
+            AddNewEntityProposal(
+                onAddButtonClicked = onNewBookClicked,
+                proposalText = stringResource(R.string.resource_add_books)
+            )
+        }
         BookList(
             books = books,
             onItemClicked = onItemClicked,

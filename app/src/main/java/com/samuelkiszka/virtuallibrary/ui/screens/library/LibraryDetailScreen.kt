@@ -68,7 +68,6 @@ import com.samuelkiszka.virtuallibrary.ui.common.VirtualLibraryTopBar
 import com.samuelkiszka.virtuallibrary.ui.navigation.NavigationDestination
 import com.samuelkiszka.virtuallibrary.ui.screens.collection.CollectionDetailDestination
 import com.samuelkiszka.virtuallibrary.ui.screens.collection.CollectionListDestination
-import com.samuelkiszka.virtuallibrary.ui.screens.search.AddEditBookDestination
 import com.samuelkiszka.virtuallibrary.ui.theme.VirtualLibraryTheme
 import kotlinx.coroutines.launch
 
@@ -599,7 +598,7 @@ fun ReadingDuration(
             color = MaterialTheme.colorScheme.onPrimaryContainer,
         )
         Text(
-            text = if (duration != -1) "$duration" else "Not yet!",
+            text = if (duration != -1) "$duration" else stringResource(R.string.label_not_started_reading),
             color = MaterialTheme.colorScheme.onPrimaryContainer,
         )
     }

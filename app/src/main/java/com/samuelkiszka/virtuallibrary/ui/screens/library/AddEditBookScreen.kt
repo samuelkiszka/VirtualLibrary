@@ -1,4 +1,4 @@
-package com.samuelkiszka.virtuallibrary.ui.screens.search
+package com.samuelkiszka.virtuallibrary.ui.screens.library
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -20,6 +20,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -30,7 +31,6 @@ import com.samuelkiszka.virtuallibrary.R
 import com.samuelkiszka.virtuallibrary.ui.common.SaveButton
 import com.samuelkiszka.virtuallibrary.ui.common.VirtualLibraryTopBar
 import com.samuelkiszka.virtuallibrary.ui.navigation.NavigationDestination
-import com.samuelkiszka.virtuallibrary.ui.screens.library.LibraryDetailDestination
 import kotlinx.coroutines.launch
 
 object AddEditBookDestination : NavigationDestination {
@@ -50,7 +50,7 @@ fun AddEditBookScreen(
     Scaffold(
         topBar = {
             VirtualLibraryTopBar(
-                screenTitleId = R.string.screen_add_edit_book,
+                screenTitleId = if (viewModel.id != 0) R.string.screen_add_edit_book_edit else R.string.screen_add_edit_book_add,
                 canNavigateBack = true,
                 navigateBack = { navController.navigateUp() }
             )
@@ -144,7 +144,7 @@ fun ValueEditingFields(
         OutlinedTextField(
             value = viewModel.title,
             onValueChange = { viewModel.updateTitle(it) },
-            label = { Text("Title") },
+            label = { Text(stringResource(R.string.label_title)) },
             keyboardOptions = KeyboardOptions(
                 imeAction = ImeAction.Next
             ),
@@ -154,7 +154,7 @@ fun ValueEditingFields(
         OutlinedTextField(
             value = viewModel.author,
             onValueChange = { viewModel.updateAuthor(it) },
-            label = { Text("Author") },
+            label = { Text(stringResource(R.string.label_author)) },
             keyboardOptions = KeyboardOptions(
                 imeAction = ImeAction.Next
             ),
@@ -164,7 +164,7 @@ fun ValueEditingFields(
         OutlinedTextField(
             value = viewModel.yearPublished,
             onValueChange = { viewModel.updateYearPublished(it) },
-            label = { Text("Year published") },
+            label = { Text(stringResource(R.string.label_year_published)) },
             keyboardOptions = KeyboardOptions(
                 imeAction = ImeAction.Next
             ),
@@ -174,7 +174,7 @@ fun ValueEditingFields(
         OutlinedTextField(
             value = viewModel.numberOfPages,
             onValueChange = { viewModel.updateNumberOfPages(it) },
-            label = { Text("Number of pages") },
+            label = { Text(stringResource(R.string.label_number_of_pages)) },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Number,
                 imeAction = ImeAction.Done

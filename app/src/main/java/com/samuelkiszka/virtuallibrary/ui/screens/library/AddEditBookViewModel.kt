@@ -1,4 +1,4 @@
-package com.samuelkiszka.virtuallibrary.ui.screens.search
+package com.samuelkiszka.virtuallibrary.ui.screens.library
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf

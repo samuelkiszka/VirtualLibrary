@@ -20,7 +20,6 @@ data class BookEntity(
     val numberOfPages: Int = 0,
     val notes: String = "",
     val coverUrl: String = "",
-    val readingStatus: ReadingStatus = ReadingStatus.NOT_STARTED,
     val startDate: String = "",
     val endDate: String = "",
     val rating: Float = 0f
@@ -45,28 +44,5 @@ data class BookEntity(
             }
         """
         return URLEncoder.encode(data, StandardCharsets.UTF_8.toString())
-    }
-}
-
-enum class ReadingStatus {
-    NOT_STARTED,
-    IN_PROGRESS,
-    FINISHED
-}
-
-class ReadingStatusConverter {
-    @TypeConverter
-    fun readingStatusFromString(value: Int): ReadingStatus {
-        return when (value) {
-            ReadingStatus.NOT_STARTED.ordinal -> ReadingStatus.NOT_STARTED
-            ReadingStatus.IN_PROGRESS.ordinal -> ReadingStatus.IN_PROGRESS
-            ReadingStatus.FINISHED.ordinal -> ReadingStatus.FINISHED
-            else -> throw IllegalArgumentException("Invalid reading status")
-        }
-    }
-
-    @TypeConverter
-    fun readingStatusToInt(value: ReadingStatus): Int {
-        return value.ordinal
     }
 }

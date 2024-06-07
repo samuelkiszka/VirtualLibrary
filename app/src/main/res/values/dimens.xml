@@ -1,7 +1,7 @@
 <resources>
-    <dimen name="padding_around">8dp</dimen>
     <dimen name="padding_extra_little">3dp</dimen>
     <dimen name="padding_little">5dp</dimen>
+    <dimen name="padding_around">8dp</dimen>
     <dimen name="padding_small">8dp</dimen>
     <dimen name="padding_medium">16dp</dimen>
 
@@ -10,6 +10,7 @@
     <!-- List card values -->
     <dimen name="list_image_width">74sp</dimen>
     <dimen name="list_card_height">110sp</dimen>
+    <dimen name="list_card_stars_size">14sp</dimen>
 
     <!-- Collection values -->
     <dimen name="collection_image_height">150sp</dimen>
@@ -22,4 +23,8 @@
 
     <!-- Icon values -->
     <dimen name="icon_size">25sp</dimen>
+
+    <!-- Membership dialog values -->
+    <dimen name="membership_dialog_width">300dp</dimen>
+    <dimen name="membership_dialog_height">400dp</dimen>
 </resources>

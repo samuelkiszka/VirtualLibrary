@@ -5,11 +5,15 @@
     <!-- Screen names -->
     <string name="screen_library_list">Library</string>
     <string name="screen_library_detail">Book Detail</string>
+    <string name="screen_add_edit_book">Add/Edit book</string>
+    <string name="screen_add_edit_book_add">Add new book</string>
+    <string name="screen_add_edit_book_edit">Edit book</string>
     <string name="screen_collection_list">Collections</string>
     <string name="screen_collection_detail">Collection Detail</string>
+    <string name="screen_add_edit_collection">Add/Edit collection</string>
+    <string name="screen_add_edit_collection_add">Add new collection</string>
+    <string name="screen_add_edit_collection_edit">Edit collection</string>
     <string name="screen_search_list">Search</string>
-    <string name="screen_add_edit_book">Add new book</string>
-    <string name="screen_add_edit_collection">Add new collection</string>
 
     <!-- Search bar hints -->
     <string name="search_hint_library_list">Book title or author name..</string>
@@ -19,12 +23,21 @@
     <!-- Labels -->
     <string name="label_rating">Rating</string>
     <string name="label_days_count">Days</string>
+    <string name="label_not_started_reading">Not yet!</string>
     <string name="label_notes">Notes</string>
+    <string name="label_title">Title</string>
+    <string name="label_author">Author</string>
+    <string name="label_year_published">Year published</string>
+    <string name="label_number_of_pages">Number of pages</string>
+    <string name="labebl_name">Name</string>
+    <string name="label_description">Description</string>
 
     <!-- Button texts -->
     <string name="button_back">Back</string>
     <string name="button_save">Save</string>
     <string name="button_cancel">Cancel</string>
+    <string name="button_confirm">Confirm</string>
+    <string name="button_dismiss">Dismiss</string>
     <string name="button_edit">Edit Button</string>
     <string name="button_option">Option button</string>
     <string name="button_save_changes">Save changes</string>
@@ -49,11 +62,13 @@
     <string name="alert_delete_book_text">Do you really want to delete book %1$s?</string>
     <string name="alert_delete_collection_title">Delete collection</string>
     <string name="alert_delete_collection_text">Do you really want to delete collection %1$s?</string>
+    <string name="alert_icon">Alert icon</string>
 
     <!-- Add resources messages -->
-    <string name="resource_search_book">To find a book online, \nsimply type in the title or create a new book yourself!</string>
+    <string name="resource_search_book">Search for books online or create a new one yourself!</string>
     <string name="resource_search_book_error">Some error occurred while searching for books. Please try again later or add new book yourself!</string>
-    <string name="resource_add_collection">You don\'t have any collections yet. Add one!</string>
+    <string name="resource_add_books">You don\'t have any books yet. Add some!</string>
+    <string name="resource_add_collection">You don\'t have any collection yet. Add one!</string>
     <string name="resource_add_book_to_collection_hint">Add book to collection!</string>
     <string name="resource_add_book_to_collection">You don\'t have any books in this collection. Add some!</string>
     <string name="resource_add_book_to_collection_no_more_books">You have added all available books to this collection. Find more books to read!</string>

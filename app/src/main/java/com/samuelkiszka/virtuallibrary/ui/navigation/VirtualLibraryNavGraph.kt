@@ -22,9 +22,9 @@ import com.samuelkiszka.virtuallibrary.ui.screens.library.LibraryDetailScreen
 import com.samuelkiszka.virtuallibrary.ui.screens.library.LibraryDetailViewModel
 import com.samuelkiszka.virtuallibrary.ui.screens.library.LibraryListDestination
 import com.samuelkiszka.virtuallibrary.ui.screens.library.LibraryListScreen
-import com.samuelkiszka.virtuallibrary.ui.screens.search.AddEditBookDestination
-import com.samuelkiszka.virtuallibrary.ui.screens.search.AddEditBookScreen
-import com.samuelkiszka.virtuallibrary.ui.screens.search.AddEditBookViewModel
+import com.samuelkiszka.virtuallibrary.ui.screens.library.AddEditBookDestination
+import com.samuelkiszka.virtuallibrary.ui.screens.library.AddEditBookScreen
+import com.samuelkiszka.virtuallibrary.ui.screens.library.AddEditBookViewModel
 import com.samuelkiszka.virtuallibrary.ui.screens.search.SearchListDestination
 import com.samuelkiszka.virtuallibrary.ui.screens.search.SearchListScreen
 import com.samuelkiszka.virtuallibrary.ui.screens.search.SearchListViewModel

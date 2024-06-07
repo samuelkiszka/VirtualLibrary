@@ -161,7 +161,7 @@ fun VirtualLibraryBottomBar(
             Button(
                 onClick = { navController.navigate(LibraryListDestination.route) },
                 modifier = Modifier
-                    .padding(5.dp)
+                    .padding(dimensionResource(id = R.dimen.padding_little))
             ) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally
@@ -184,7 +184,7 @@ fun VirtualLibraryBottomBar(
             Button(
                 onClick = { navController.navigate(CollectionListDestination.route) },
                 modifier = Modifier
-                    .padding(5.dp)
+                    .padding(dimensionResource(id = R.dimen.padding_little))
             ) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally
@@ -207,7 +207,7 @@ fun VirtualLibraryBottomBar(
             Button(
                 onClick = { navController.navigate(SearchListDestination.route) },
                 modifier = Modifier
-                    .padding(5.dp)
+                    .padding(dimensionResource(id = R.dimen.padding_little))
             ) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally
@@ -243,7 +243,7 @@ fun DefaultAlertDialog(
     if (showDialogue) {
         AlertDialog(
             icon = {
-                Icon(icon, contentDescription = "Example Icon")
+                Icon(icon, contentDescription = stringResource(R.string.alert_icon))
             },
             title = {
                 Text(text = dialogTitle)
@@ -260,7 +260,7 @@ fun DefaultAlertDialog(
                         onConfirmation()
                     }
                 ) {
-                    Text("Confirm")
+                    Text(stringResource(R.string.button_confirm))
                 }
             },
             dismissButton = {
@@ -269,7 +269,7 @@ fun DefaultAlertDialog(
                         onDismissRequest()
                     }
                 ) {
-                    Text("Dismiss")
+                    Text(stringResource(R.string.button_dismiss))
                 }
             }
         )
@@ -324,21 +324,6 @@ fun SaveButton(
     ) {
         Text(stringResource(R.string.button_save))
     }
-}
-
-@Composable
-fun Divider() {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(
-                MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f)
-            )
-            .height(2.dp)
-            .padding(
-                vertical = dimensionResource(id = R.dimen.padding_little),
-            )
-    )
 }
 
 @Composable
@@ -402,7 +387,7 @@ fun BookListCard(
                             updateRating = {},
                             numberOfStars = book.rating.toInt(),
                             withLabel = false,
-                            size = 14.dp,
+                            size = dimensionResource(id = R.dimen.list_card_stars_size),
                             modifier = Modifier
                                 .align(Alignment.BottomEnd)
                         )
@@ -420,7 +405,7 @@ fun BookListCard(
                             numberOfStars = book.rating.toInt(),
                             updateRating = {},
                             withLabel = false,
-                            size = 14.dp,
+                            size = dimensionResource(id = R.dimen.list_card_stars_size),
                             modifier = Modifier
                         )
                         LinearProgressIndicator(
@@ -445,7 +430,7 @@ fun Rating(
     rating: Float,
     updateRating: (Float) -> Unit,
     modifier: Modifier = Modifier,
-    size: Dp = 24.dp,
+    size: Dp = dimensionResource(id = R.dimen.icon_size),
     withLabel: Boolean = true,
     numberOfStars: Int = 5
 ) {
@@ -491,14 +476,16 @@ fun MembershipDialog(
     navigateToAddMembers: () -> Unit
 ) {
     if (showAddBookDialog) {
+        val selected = CardDefaults.cardColors().containerColor
+        val idle = MaterialTheme.colorScheme.background
         Dialog(
             onDismissRequest = toggleManageMembershipDialog
         ) {
             Card(
                 shape = MaterialTheme.shapes.medium,
                 modifier = Modifier
-                    .width(300.dp)
-                    .height(400.dp)
+                    .width(dimensionResource(id = R.dimen.membership_dialog_width))
+                    .height(dimensionResource(id = R.dimen.membership_dialog_height))
             ) {
                 Row(
                     modifier = Modifier
@@ -511,9 +498,7 @@ fun MembershipDialog(
                                 showItemsToAdd(true)
                             }
                             .background(
-                                color = if (addMembersOption) CardDefaults.cardColors().containerColor else MaterialTheme.colorScheme.background.copy(
-                                    alpha = 0.5f
-                                )
+                                color = if (addMembersOption) selected else idle.copy(alpha = 0.5f)
                             )
                             .weight(1f)
                     ) {
@@ -534,9 +519,7 @@ fun MembershipDialog(
                                 showItemsToAdd(false)
                             }
                             .background(
-                                color = if (!addMembersOption) CardDefaults.cardColors().containerColor else MaterialTheme.colorScheme.background.copy(
-                                    alpha = 0.5f
-                                )
+                                color = if (!addMembersOption) selected else idle.copy(alpha = 0.5f)
                             )
                             .weight(1f)
                     ) {
