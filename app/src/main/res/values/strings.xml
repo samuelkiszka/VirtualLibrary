@@ -3,50 +3,60 @@
     <string name="app_name">Virtual Library</string>
 
     <!-- Screen names -->
-    <string name="library_list_screen_name">Library</string>
-    <string name="library_detail_screen_name">Book Detail</string>
-    <string name="collection_list_screen_name">Collections</string>
-    <string name="collection_detail_screen_name">Collection Detail</string>
-    <string name="search_list_screen_name">Search</string>
-    <string name="add_edit_book_screen_name">Add new book</string>
-    <string name="add_edit_collection_screen_name">Add new collection</string>
+    <string name="screen_library_list">Library</string>
+    <string name="screen_library_detail">Book Detail</string>
+    <string name="screen_collection_list">Collections</string>
+    <string name="screen_collection_detail">Collection Detail</string>
+    <string name="screen_search_list">Search</string>
+    <string name="screen_add_edit_book">Add new book</string>
+    <string name="screen_add_edit_collection">Add new collection</string>
 
     <!-- Search bar hints -->
-    <string name="library_list_search_hint">Book title or author name..</string>
-    <string name="collection_list_search_hint">Collection name..</string>
-    <string name="search_list_search_hint">Book title or author name..</string>
+    <string name="search_hint_library_list">Book title or author name..</string>
+    <string name="search_hint_collection_list">Collection name..</string>
+    <string name="search_hint_search_list">Book title or author name..</string>
 
+    <!-- Labels -->
+    <string name="label_rating">Rating</string>
+    <string name="label_days_count">Days</string>
+    <string name="label_notes">Notes</string>
 
-    <string name="back_button">Back</string>
-    <string name="option_button">Option button</string>
-    <string name="add_book_button">Add Book</string>
-    <string name="edit_book_button">Edit Book</string>
-    <string name="remove_book_button">Delete book</string>
-    <string name="add_item_button">Add Entity Button</string>
-    <string name="edit_button">Edit Button</string>
-    <string name="date_picker">Date Picker</string>
+    <!-- Button texts -->
+    <string name="button_back">Back</string>
+    <string name="button_save">Save</string>
+    <string name="button_cancel">Cancel</string>
+    <string name="button_edit">Edit Button</string>
+    <string name="button_option">Option button</string>
+    <string name="button_save_changes">Save changes</string>
+    <string name="button_add_book">Add Book</string>
+    <string name="button_edit_book">Edit Book</string>
+    <string name="button_remove_book">Delete book</string>
+    <string name="button_add_items">Add Entity Button</string>
+    <string name="button_date_picker">Date Picker</string>
+    <string name="button_add_collections_membership">Add \ncollections</string>
+    <string name="button_remove_collections_membership">Remove collections</string>
+    <string name="button_add_books_membership">Add books</string>
+    <string name="button_remove_books_membership">Remove books</string>
 
-    <string name="save_button_text">Save</string>
-    <string name="cancel_button_text">Cancel</string>
-    <string name="save_changes_button_text">Save changes</string>
+    <!-- Dropdown menu texts -->
+    <string name="dropdown_option_edit_collection">Edit collection</string>
+    <string name="dropdown_option_delete_collection">Delete collection</string>
+    <string name="dropdown_option_manage_books">Manage books</string>
+    <string name="dropdown_option_add_collection">Add collection</string>
 
-    <string name="add_book_text">To find a book online, \nsimply type in the title or create a new book yourself!</string>
-    <string name="add_book_error_text">Some error occurred while searching for books. Please try again later or add new book yourself!</string>
-    <string name="loading">Loading..</string>
-    <string name="book_delete_title">Delete book</string>
-    <string name="book_delete_text">Do you really want to delete book %1$s?</string>
-    <string name="add_collection_text">You don\'t have any collections yet. Add one!</string>
+    <!-- Alert messages -->
+    <string name="alert_delete_book_title">Delete book</string>
+    <string name="alert_delete_book_text">Do you really want to delete book %1$s?</string>
+    <string name="alert_delete_collection_title">Delete collection</string>
+    <string name="alert_delete_collection_text">Do you really want to delete collection %1$s?</string>
 
-    <string name="collection_delete_title">Delete collection</string>
-    <string name="collection_delete_text">Do you really want to delete collection %1$s?</string>
-    <string name="add_book_to_collection_text">You don\'t have any books in this collection. Add some!</string>
-    <string name="add_books_to_collection_no_more_books_text">You have added all available books to this collection. Find more books to read!</string>
-    <string name="remove_books_from_collection_no_books_in_collection">There are no books in this collection.</string>
-    <string name="add_collections_to_book_no_more_collections">You don\'t have any more collections. \nMaybe create some new ones?</string>
-    <string name="remove_collections_from_book_no_more_collections">This book is not in any collection. \nAdd it to a collection?</string>
-
-    <string name="add_collections_membership">Add \ncollections</string>
-    <string name="remove_collections_membership">Remove collections</string>
-    <string name="add_books_membership">Add books</string>
-    <string name="remove_books_membership">Remove books</string>
+    <!-- Add resources messages -->
+    <string name="resource_search_book">To find a book online, \nsimply type in the title or create a new book yourself!</string>
+    <string name="resource_search_book_error">Some error occurred while searching for books. Please try again later or add new book yourself!</string>
+    <string name="resource_add_collection">You don\'t have any collections yet. Add one!</string>
+    <string name="resource_add_book_to_collection_hint">Add book to collection!</string>
+    <string name="resource_add_book_to_collection">You don\'t have any books in this collection. Add some!</string>
+    <string name="resource_add_book_to_collection_no_more_books">You have added all available books to this collection. Find more books to read!</string>
+    <string name="resource_add_collections_to_book">This book is not in any collection. \nAdd it to a collection?</string>
+    <string name="resource_add_collections_to_book_no_more_collections">You don\'t have any more collections. \nMaybe create some new ones?</string>
 </resources>

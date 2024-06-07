@@ -30,7 +30,7 @@ import com.samuelkiszka.virtuallibrary.ui.theme.VirtualLibraryTheme
 
 object LibraryListDestination : NavigationDestination {
     override val route = "LibraryList"
-    override val titleRes = R.string.library_list_screen_name
+    override val titleRes = R.string.screen_library_list
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -43,7 +43,7 @@ fun LibraryListScreen(
     Scaffold(
         topBar = {
             VirtualLibraryTopBar(
-                screenTitleId = R.string.library_list_screen_name
+                screenTitleId = R.string.screen_library_list
             )
         },
         bottomBar = {
@@ -84,7 +84,7 @@ fun LibraryListBody(
             .fillMaxSize()
     ) {
         VirtualLibrarySearchBar(
-            hintText = stringResource(id = R.string.library_list_search_hint),
+            hintText = stringResource(id = R.string.search_hint_library_list),
             query = searchQuery,
             onQueryChange = { updateSearchQuery(it) },
         )

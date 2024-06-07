@@ -39,7 +39,7 @@ import com.samuelkiszka.virtuallibrary.ui.navigation.NavigationDestination
 
 object SearchListDestination : NavigationDestination {
     override val route = "SearchList"
-    override val titleRes = R.string.search_list_screen_name
+    override val titleRes = R.string.screen_search_list
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -51,7 +51,7 @@ fun SearchListScreen(
     Scaffold(
         topBar = {
             VirtualLibraryTopBar(
-                screenTitleId = R.string.search_list_screen_name
+                screenTitleId = R.string.screen_search_list
             )
         },
         bottomBar = {
@@ -94,7 +94,7 @@ fun SearchListBody(
             .fillMaxSize()
     ) {
         VirtualLibrarySearchBar(
-            hintText = stringResource(id = R.string.search_list_search_hint),
+            hintText = stringResource(id = R.string.search_hint_search_list),
             query = viewModel.query,
             onSearch = { viewModel.getBooksByQuery() },
             onQueryChange = { viewModel.updateQuery(it) }
@@ -102,7 +102,7 @@ fun SearchListBody(
         when (viewModel.searchListUiState) {
             is SearchListUiState.Loading -> LoadingScreen()
             is SearchListUiState.Error -> AddNewEntityProposal(
-                proposalText = stringResource(id = R.string.add_book_error_text),
+                proposalText = stringResource(id = R.string.resource_search_book_error),
                 onAddButtonClicked = onAddButtonClicked
             )
             is SearchListUiState.Success -> SearchBookList(
@@ -110,7 +110,7 @@ fun SearchListBody(
                 onBookClicked = onBookClicked
             )
             is SearchListUiState.Empty -> AddNewEntityProposal(
-                proposalText = stringResource(id = R.string.add_book_text),
+                proposalText = stringResource(id = R.string.resource_search_book),
                 onAddButtonClicked = onAddButtonClicked
             )
         }

@@ -34,7 +34,7 @@ import com.samuelkiszka.virtuallibrary.ui.screens.search.SearchListDestination
 
 object CollectionDetailDestination : NavigationDestination {
     override val route = "CollectionDetail"
-    override val titleRes = R.string.collection_detail_screen_name
+    override val titleRes = R.string.screen_collection_detail
     const val ARGS = "id"
     val routeWithArgs = "${CollectionDetailDestination.route}/{$ARGS}"
 }
@@ -61,7 +61,7 @@ fun CollectionDetailScreen(
                         DropdownMenuItem(
                             text = {
                                 Text(
-                                    text = "Manage books",
+                                    text = stringResource(R.string.dropdown_option_manage_books),
                                     style = MaterialTheme.typography.titleMedium
                                 )
                             },
@@ -73,7 +73,7 @@ fun CollectionDetailScreen(
                         DropdownMenuItem(
                             text = {
                                 Text(
-                                    text = "Edit collection",
+                                    text = stringResource(R.string.dropdown_option_edit_collection),
                                     style = MaterialTheme.typography.titleMedium
                                 )
                             },
@@ -85,7 +85,7 @@ fun CollectionDetailScreen(
                         DropdownMenuItem(
                             text = {
                                 Text(
-                                    text = "Delete collection",
+                                    text = stringResource(R.string.dropdown_option_delete_collection),
                                     style = MaterialTheme.typography.titleMedium
                                 )
                             },
@@ -140,8 +140,8 @@ fun CollectionDetailBody(
             viewModel.toggleDeleteAlert()
             navigateUp()
         },
-        dialogTitle = stringResource(id = R.string.collection_delete_title),
-        dialogText = stringResource(id = R.string.collection_delete_text).format(viewModel.uiState.collection.name),
+        dialogTitle = stringResource(id = R.string.alert_delete_collection_title),
+        dialogText = stringResource(id = R.string.alert_delete_collection_text).format(viewModel.uiState.collection.name),
         icon = Icons.Filled.Delete
     )
     MembershipDialog(
@@ -158,10 +158,10 @@ fun CollectionDetailBody(
         },
         addMember = viewModel::addBookToCollection,
         removeMember = viewModel::removeBookFromCollection,
-        addText = stringResource(id = R.string.add_books_membership),
-        removeText = stringResource(id = R.string.remove_books_membership),
-        noMemberToAddText = stringResource(id = R.string.add_books_to_collection_no_more_books_text),
-        noMemberToRemoveText = stringResource(id = R.string.add_book_to_collection_text),
+        addText = stringResource(id = R.string.button_add_books_membership),
+        removeText = stringResource(id = R.string.button_remove_books_membership),
+        noMemberToAddText = stringResource(id = R.string.resource_add_book_to_collection_no_more_books),
+        noMemberToRemoveText = stringResource(id = R.string.resource_add_book_to_collection),
         navigateToAddMembers = navigateToAddBook
     )
     Column(
@@ -176,7 +176,7 @@ fun CollectionDetailBody(
                     viewModel.toggleAddBookDialog()
                     viewModel.showItemsToAdd(true)
                 },
-                proposalText = stringResource(id = R.string.add_book_to_collection_text)
+                proposalText = stringResource(id = R.string.resource_add_book_to_collection)
             )
         }
         else {

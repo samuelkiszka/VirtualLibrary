@@ -26,7 +26,7 @@ import kotlinx.coroutines.launch
 
 object AddEditCollectionDestination : NavigationDestination {
     override val route = "AddEditCollection"
-    override val titleRes = R.string.add_edit_collection_screen_name
+    override val titleRes = R.string.screen_add_edit_collection
     const val ARGS = "data"
     val routeWithArgs = "$route/{$ARGS}"
 }

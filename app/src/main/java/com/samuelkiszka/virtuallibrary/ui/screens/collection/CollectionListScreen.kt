@@ -39,7 +39,7 @@ import com.samuelkiszka.virtuallibrary.ui.screens.library.LibraryDetailDestinati
 
 object CollectionListDestination : NavigationDestination {
     override val route = "CollectionList"
-    override val titleRes = R.string.collection_list_screen_name
+    override val titleRes = R.string.screen_collection_list
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -52,7 +52,7 @@ fun CollectionListScreen(
     Scaffold(
         topBar = {
             VirtualLibraryTopBar(
-                screenTitleId = R.string.collection_list_screen_name,
+                screenTitleId = R.string.screen_collection_list,
                 haveOptions = true,
                 onOptionClick = viewModel::toggleDropdownMenu,
                 options = {
@@ -63,7 +63,7 @@ fun CollectionListScreen(
                          DropdownMenuItem(
                              text = {
                                  Text(
-                                     text = "Add collection",
+                                     text = stringResource(R.string.dropdown_option_add_collection),
                                      style = MaterialTheme.typography.titleMedium
                                  )
                              },
@@ -124,14 +124,14 @@ fun CollectionListBody(
         modifier = modifier.fillMaxSize()
     ) {
         VirtualLibrarySearchBar(
-            hintText = stringResource(id = R.string.collection_list_search_hint),
+            hintText = stringResource(id = R.string.search_hint_collection_list),
             query = searchQuery,
             onQueryChange = { updateQuery(it) }
         )
         if (collections.isEmpty()) {
             AddNewEntityProposal(
                 onAddButtonClicked = { onNewCollectionClicked(-1) },
-                proposalText = stringResource(R.string.add_collection_text)
+                proposalText = stringResource(R.string.resource_add_collection)
             )
         }
         CollectionList(

@@ -35,6 +35,7 @@ import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -42,11 +43,14 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.gowtham.ratingbar.RatingBar
+import com.gowtham.ratingbar.RatingBarStyle
 import com.samuelkiszka.virtuallibrary.R
 import com.samuelkiszka.virtuallibrary.data.enums.NavbarCurrentPosition
 import com.samuelkiszka.virtuallibrary.data.models.AddListItemModel
@@ -115,7 +119,7 @@ fun VirtualLibraryTopBar(
                 IconButton(onClick = navigateBack) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = stringResource(R.string.back_button)
+                        contentDescription = stringResource(R.string.button_back)
                     )
                 }
             }
@@ -129,7 +133,7 @@ fun VirtualLibraryTopBar(
                 ) {
                     Icon(
                         imageVector = Icons.Filled.MoreVert,
-                        contentDescription = stringResource(R.string.option_button)
+                        contentDescription = stringResource(R.string.button_option)
                     )
                 }
                 options()
@@ -165,13 +169,13 @@ fun VirtualLibraryBottomBar(
                     val libraryColor = if (currentScreen == NavbarCurrentPosition.LIBRARY) selected else idle
                     Icon(
                         painter = painterResource(id = R.drawable.icon_library),
-                        contentDescription = stringResource(id = R.string.library_list_screen_name),
+                        contentDescription = stringResource(id = R.string.screen_library_list),
                         tint = libraryColor,
                         modifier = Modifier
                             .size(dimensionResource(id = R.dimen.icon_size)),
                     )
                     Text(
-                        text = "Library",
+                        text = stringResource(id = R.string.screen_library_list),
                         color = libraryColor,
                         style = MaterialTheme.typography.bodySmall
                     )
@@ -188,13 +192,13 @@ fun VirtualLibraryBottomBar(
                     val collectionsColor = if (currentScreen == NavbarCurrentPosition.COLLECTION) selected else idle
                     Icon(
                         painter = painterResource(id = R.drawable.icon_collections),
-                        contentDescription = stringResource(id = R.string.collection_list_screen_name),
+                        contentDescription = stringResource(id = R.string.screen_collection_list),
                         tint = collectionsColor,
                         modifier = Modifier
                             .size(dimensionResource(id = R.dimen.icon_size)),
                     )
                     Text(
-                        text = stringResource(id = R.string.collection_list_screen_name),
+                        text = stringResource(id = R.string.screen_collection_list),
                         color = collectionsColor,
                         style = MaterialTheme.typography.bodySmall
                     )
@@ -211,13 +215,13 @@ fun VirtualLibraryBottomBar(
                     val searchColor = if (currentScreen == NavbarCurrentPosition.SEARCH) selected else idle
                     Icon(
                         painter = painterResource(id = R.drawable.icon_search),
-                        contentDescription = stringResource(id = R.string.search_list_screen_name),
+                        contentDescription = stringResource(id = R.string.screen_search_list),
                         tint = searchColor,
                         modifier = Modifier
                             .size(dimensionResource(id = R.dimen.icon_size)),
                     )
                     Text(
-                        text = "Search",
+                        text = stringResource(id = R.string.screen_search_list),
                         color = searchColor,
                         style = MaterialTheme.typography.bodySmall
                     )
@@ -300,7 +304,7 @@ fun AddNewEntityProposal(
         ) {
             Icon(
                 painter = painterResource(id = R.drawable.icon_add_resource),
-                contentDescription = stringResource(R.string.add_item_button),
+                contentDescription = stringResource(R.string.button_add_items),
                 modifier = Modifier
                     .size(50.dp)
             )
@@ -318,7 +322,7 @@ fun SaveButton(
         modifier = modifier
             .fillMaxWidth()
     ) {
-        Text(stringResource(R.string.save_button_text))
+        Text(stringResource(R.string.button_save))
     }
 }
 
@@ -382,30 +386,91 @@ fun BookListCard(
                         modifier = Modifier
                     )
                 }
-                if (book.pagesRead == book.numberOfPages) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.icon_readed),
-                        contentDescription = "",
-                        modifier = Modifier
-                            .size(dimensionResource(id = R.dimen.icon_size))
-                            .align(Alignment.TopEnd)
-                    )
+                if (book.pagesRead == book.numberOfPages || book.pagesRead == 0) {
+                    if (book.pagesRead == book.numberOfPages) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.icon_readed),
+                            contentDescription = "",
+                            modifier = Modifier
+                                .size(dimensionResource(id = R.dimen.icon_size))
+                                .align(Alignment.TopEnd)
+                        )
+                    }
+                    if (book.rating != 0.0f) {
+                        Rating(
+                            rating = book.rating,
+                            updateRating = {},
+                            numberOfStars = book.rating.toInt(),
+                            withLabel = false,
+                            size = 14.dp,
+                            modifier = Modifier
+                                .align(Alignment.BottomEnd)
+                        )
+                    }
                 }
                 else {
-                    LinearProgressIndicator(
-                        progress = { book.pagesRead.toFloat() / book.numberOfPages.toFloat() },
+                    Column(
+                        horizontalAlignment = Alignment.End,
                         modifier = Modifier
-                            .padding(
-                                top = dimensionResource(id = R.dimen.padding_little)
-                            )
                             .fillMaxWidth()
-                            .align(Alignment.BottomStart),
-
+                            .align(Alignment.BottomEnd)
+                    ) {
+                        Rating(
+                            rating = book.rating,
+                            numberOfStars = book.rating.toInt(),
+                            updateRating = {},
+                            withLabel = false,
+                            size = 14.dp,
+                            modifier = Modifier
                         )
+                        LinearProgressIndicator(
+                            progress = { book.pagesRead.toFloat() / book.numberOfPages.toFloat() },
+                            modifier = Modifier
+                                .padding(
+                                    top = dimensionResource(id = R.dimen.padding_little)
+                                )
+                                .fillMaxWidth()
+                            )
+                    }
+
                 }
             }
         }
 
+    }
+}
+
+@Composable
+fun Rating(
+    rating: Float,
+    updateRating: (Float) -> Unit,
+    modifier: Modifier = Modifier,
+    size: Dp = 24.dp,
+    withLabel: Boolean = true,
+    numberOfStars: Int = 5
+) {
+    Column(
+        modifier = modifier
+    ) {
+        if (withLabel) {
+            Text(
+                text = stringResource(id = R.string.label_rating),
+                style = MaterialTheme.typography.labelLarge
+            )
+        }
+        RatingBar(
+            value = rating,
+            style = RatingBarStyle.Stroke(
+                strokeColor = Color.Black
+            ),
+            numOfStars = numberOfStars,
+            onValueChange = {
+                updateRating(it)
+            },
+            size = size
+        ) {
+
+        }
     }
 }
 

@@ -6,5 +6,6 @@ data class BookListModel(
     val author: String,
     val coverUrl: String,
     val pagesRead: Int,
-    val numberOfPages: Int
+    val numberOfPages: Int,
+    val rating: Float
 )

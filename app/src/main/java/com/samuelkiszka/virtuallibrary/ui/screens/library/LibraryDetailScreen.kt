@@ -58,13 +58,12 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.gowtham.ratingbar.RatingBar
-import com.gowtham.ratingbar.RatingBarStyle
 import com.samuelkiszka.virtuallibrary.R
 import com.samuelkiszka.virtuallibrary.data.database.entities.BookEntity
 import com.samuelkiszka.virtuallibrary.data.models.AddListItemModel
 import com.samuelkiszka.virtuallibrary.ui.common.DefaultAlertDialog
 import com.samuelkiszka.virtuallibrary.ui.common.MembershipDialog
+import com.samuelkiszka.virtuallibrary.ui.common.Rating
 import com.samuelkiszka.virtuallibrary.ui.common.VirtualLibraryTopBar
 import com.samuelkiszka.virtuallibrary.ui.navigation.NavigationDestination
 import com.samuelkiszka.virtuallibrary.ui.screens.collection.CollectionDetailDestination
@@ -75,7 +74,7 @@ import kotlinx.coroutines.launch
 
 object LibraryDetailDestination : NavigationDestination {
     override val route = "LibraryDetail"
-    override val titleRes = R.string.library_detail_screen_name
+    override val titleRes = R.string.screen_library_detail
     const val ARGS = "id"
     val routeWithArgs = "$route/{$ARGS}"
 }
@@ -103,7 +102,7 @@ fun LibraryDetailScreen(
                         DropdownMenuItem(
                             text = {
                                 Text(
-                                    text = stringResource(id = R.string.edit_book_button),
+                                    text = stringResource(id = R.string.button_edit_book),
                                     style = MaterialTheme.typography.titleMedium
                                 )
                             },
@@ -115,7 +114,7 @@ fun LibraryDetailScreen(
                         DropdownMenuItem(
                             text = {
                                 Text(
-                                    text = stringResource(id = R.string.remove_book_button),
+                                    text = stringResource(id = R.string.button_remove_book),
                                     style = MaterialTheme.typography.titleMedium
                                 )
                             },
@@ -146,7 +145,7 @@ fun LibraryDetailScreen(
                         .padding(horizontal = dimensionResource(id = R.dimen.padding_around))
                 ) {
                     Text(
-                        text = stringResource(R.string.save_changes_button_text),
+                        text = stringResource(R.string.button_save_changes),
                         style = MaterialTheme.typography.titleMedium
                     )
                 }
@@ -190,8 +189,8 @@ fun LibraryDetailBody(
             viewModel.toggleDeleteAlert()
             navigateUp()
         },
-        dialogTitle = stringResource(id = R.string.book_delete_title),
-        dialogText = stringResource(id = R.string.book_delete_text).format(viewModel.uiState.book.title),
+        dialogTitle = stringResource(id = R.string.alert_delete_book_title),
+        dialogText = stringResource(id = R.string.alert_delete_book_text).format(viewModel.uiState.book.title),
         icon = Icons.Filled.Delete
     )
     DateDialogBox(
@@ -219,10 +218,10 @@ fun LibraryDetailBody(
         members = bookCollections.value,
         addMember = viewModel::addBookToCollection,
         removeMember = viewModel::removeBookFromCollection,
-        addText = stringResource(id = R.string.add_collections_membership),
-        removeText = stringResource(id = R.string.remove_collections_membership),
-        noMemberToAddText = stringResource(id = R.string.add_collections_to_book_no_more_collections),
-        noMemberToRemoveText = stringResource(id = R.string.remove_collections_from_book_no_more_collections),
+        addText = stringResource(id = R.string.button_add_collections_membership),
+        removeText = stringResource(id = R.string.button_remove_collections_membership),
+        noMemberToAddText = stringResource(id = R.string.resource_add_collections_to_book_no_more_collections),
+        noMemberToRemoveText = stringResource(id = R.string.resource_add_collections_to_book),
         navigateToAddMembers = navigateToAddCollections
     )
     Column(
@@ -300,7 +299,7 @@ fun Header(
                     .align(Alignment.BottomStart)
             ){
                 Rating(
-                    book,
+                    book.rating,
                     updateRating = updateRating
                 )
             }
@@ -326,39 +325,6 @@ fun Info(
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier
         )
-        Text(
-            text = "isbn",
-            style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier
-        )
-    }
-}
-
-@Composable
-fun Rating(
-    bookEntity: BookEntity,
-    updateRating: (Float) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Column(
-        modifier = modifier
-    ) {
-        Text(
-            text = "Rating",
-            style = MaterialTheme.typography.labelLarge
-        )
-        RatingBar(
-            value = bookEntity.rating,
-            style = RatingBarStyle.Stroke(
-                strokeColor = Color.Black
-            ),
-            onValueChange = {
-                updateRating(it)
-            },
-            size = 24.dp
-        ) {
-
-        }
     }
 }
 
@@ -383,7 +349,7 @@ fun Collections(
     ) {
         if (collections.isEmpty()) {
             Text(
-                text = "Add book to collection!",
+                text = stringResource(id = R.string.resource_add_book_to_collection_hint),
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -424,7 +390,7 @@ fun Collections(
         ) {
             Icon(
                 imageVector = Icons.Filled.Create,
-                contentDescription = stringResource(R.string.edit_button),
+                contentDescription = stringResource(R.string.button_edit),
                 modifier = Modifier
             )
         }
@@ -564,7 +530,7 @@ fun ShowDate(
             }
             Icon(
                 imageVector = Icons.Filled.DateRange,
-                contentDescription = stringResource(R.string.date_picker),
+                contentDescription = stringResource(R.string.button_date_picker),
                 tint = MaterialTheme.colorScheme.onPrimaryContainer,
                 modifier = Modifier
             )
@@ -591,7 +557,7 @@ fun DateDialogBox(showDateDialog: Boolean,
                         }
                     ) {
                         Text(
-                            text = stringResource(id = R.string.save_button_text)
+                            text = stringResource(id = R.string.button_save)
                         )
                     }
                 },
@@ -601,7 +567,7 @@ fun DateDialogBox(showDateDialog: Boolean,
                             changeDialogDateBox()
                         }
                     ) {
-                        Text(text = stringResource(id = R.string.cancel_button_text))
+                        Text(text = stringResource(id = R.string.button_cancel))
                     }
                 },
                 content = {
@@ -629,7 +595,7 @@ fun ReadingDuration(
             .height(dimensionResource(id = R.dimen.detail_date_picker_height))
     ) {
         Text(
-            text = "Days",
+            text = stringResource(id = R.string.label_days_count),
             color = MaterialTheme.colorScheme.onPrimaryContainer,
         )
         Text(
@@ -652,7 +618,7 @@ fun Notes(
         },
         label = {
             Text(
-                text = "Notes"
+                text = stringResource(id = R.string.label_notes)
             )
         },
         modifier = modifier
