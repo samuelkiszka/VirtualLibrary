@@ -35,10 +35,13 @@ interface BookDao {
     suspend fun deleteBook(id: Long)
 
     @Query("""
-        SELECT id, title, author, coverUrl
+        SELECT id, title, author, coverUrl, pagesRead, numberOfPages
         FROM books
         WHERE title LIKE '%' || :query || '%' OR author LIKE '%' || :query || '%'
-        ORDER BY title ASC
+        ORDER BY 
+            (pagesRead > 0) AND (pagesRead != numberOfPages) DESC,
+            pagesRead/(numberOfPages * 1.0 + 0.1) DESC,
+            title ASC
     """)
     fun getBookList(query: String): Flow<List<BookListModel>>
 
@@ -62,10 +65,13 @@ interface BookDao {
     fun getBooksNotInCollection(collectionId: Long): Flow<List<AddListItemModel>>
 
     @Query("""
-        SELECT book.id, book.title, book.author, book.coverUrl
+        SELECT book.id, book.title, book.author, book.coverUrl, book.pagesRead, book.numberOfPages
         FROM books book JOIN collection_books cb ON book.id = cb.bookId
         WHERE cb.collectionId = :collectionId
-        ORDER BY book.title ASC
+        ORDER BY 
+            (book.pagesRead > 0) AND (book.pagesRead != book.numberOfPages) DESC, 
+            book.pagesRead/(book.numberOfPages * 1.0 + 0.1) DESC, 
+            book.title ASC
     """)
     fun getBooksInCollection(collectionId: Long): Flow<List<BookListModel>>
 }

@@ -18,7 +18,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.rounded.AddCircle
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -27,6 +26,7 @@ import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
@@ -364,17 +364,45 @@ fun BookListCard(
                 modifier = Modifier
                     .width(dimensionResource(id = R.dimen.list_image_width))
             )
-            Column(
+            Box(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(dimensionResource(id = R.dimen.padding_little))
             ){
-                Text(
-                    text = book.title
-                )
-                Text(
-                    text = book.author
-                )
+                Column(
+                    modifier = Modifier
+                        .align(Alignment.TopStart)
+                ) {
+                    Text(
+                        text = book.title,
+                        modifier = Modifier
+                    )
+                    Text(
+                        text = book.author,
+                        modifier = Modifier
+                    )
+                }
+                if (book.pagesRead == book.numberOfPages) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.icon_readed),
+                        contentDescription = "",
+                        modifier = Modifier
+                            .size(dimensionResource(id = R.dimen.icon_size))
+                            .align(Alignment.TopEnd)
+                    )
+                }
+                else {
+                    LinearProgressIndicator(
+                        progress = { book.pagesRead.toFloat() / book.numberOfPages.toFloat() },
+                        modifier = Modifier
+                            .padding(
+                                top = dimensionResource(id = R.dimen.padding_little)
+                            )
+                            .fillMaxWidth()
+                            .align(Alignment.BottomStart),
+
+                        )
+                }
             }
         }
 

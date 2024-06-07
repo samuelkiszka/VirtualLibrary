@@ -16,11 +16,11 @@ data class BookEntity(
     val title: String = "",
     val author: String = "",
     val yearPublished: String = "",
+    val pagesRead: Int = 0,
     val numberOfPages: Int = 0,
     val notes: String = "",
     val coverUrl: String = "",
     val readingStatus: ReadingStatus = ReadingStatus.NOT_STARTED,
-    val pagesRead: Int = 0,
     val startDate: String = "",
     val endDate: String = "",
     val rating: Float = 0f
