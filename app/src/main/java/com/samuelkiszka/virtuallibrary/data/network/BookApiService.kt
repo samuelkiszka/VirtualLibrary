@@ -11,7 +11,7 @@ interface BookApiService {
         @Query("q") query: String = "harry potter",
         @Query("fields") fields: String = "key,editions,editions.key,editions.isbn",
         @Query("language") language: String = "eng",
-        @Query("limit") limit: String = "2"
+        @Query("limit") limit: String = "10"
     ): ListOfWorks
 
     @GET("/api/books")
